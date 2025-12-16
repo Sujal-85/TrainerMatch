@@ -4,6 +4,8 @@ FROM node:20-alpine
 # Set working directory
 WORKDIR /app
 
+ENV PUPPETEER_SKIP_DOWNLOAD=true
+
 # Copy package files
 COPY package*.json ./
 

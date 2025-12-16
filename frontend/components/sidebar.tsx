@@ -76,7 +76,7 @@ export default function Sidebar() {
 
   const navItems = getNavItems();
 
-  const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
+  const isActive = (href: string) => pathname ? pathname === href || pathname.startsWith(href + '/') : false;
 
   return (
     <>

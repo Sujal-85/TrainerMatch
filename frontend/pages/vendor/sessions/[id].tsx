@@ -78,7 +78,7 @@ export default function SessionDetail() {
             <div className="flex min-h-screen bg-slate-50">
                 <Sidebar />
                 <main className="flex-1 md:pl-64 p-8">
-                    <Head><title>{session.title} | Session Details</title></Head>
+                    <Head><title>{session?.title} | Session Details</title></Head>
 
                     <Button variant="ghost" className="mb-4 pl-0 hover:bg-transparent" onClick={() => router.back()}>
                         <ArrowLeft className="w-4 h-4 mr-2" /> Back to Sessions

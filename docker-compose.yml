@@ -1,0 +1,111 @@
+services:
+  mongodb:
+    image: mongo:7
+    container_name: trainer-match-mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - trainer-match-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: trainer-match-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - trainer-match-network
+
+  minio:
+    image: minio/minio:RELEASE.2023-05-18T00-05-36Z
+    container_name: trainer-match-minio
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    networks:
+      - trainer-match-network
+
+  mongo-express:
+    image: mongo-express:latest
+    container_name: trainer-match-mongo-express
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_SERVER: mongodb
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mongodb
+    networks:
+      - trainer-match-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: trainer-match-backend
+    environment:
+      DATABASE_URL: mongodb://root:example@mongodb:27017/trainermatch?authSource=admin
+      REDIS_URL: redis://redis:6379
+      MINIO_ENDPOINT: http://minio:9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+      JWT_SECRET: trainermatch_secret_key
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+      - redis
+      - minio
+    networks:
+      - trainer-match-network
+
+  worker:
+    build:
+      context: ./worker
+      dockerfile: Dockerfile
+    container_name: trainer-match-worker
+    environment:
+      DATABASE_URL: mongodb://root:example@mongodb:27017/trainermatch?authSource=admin
+      REDIS_URL: redis://redis:6379
+      MINIO_ENDPOINT: http://minio:9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+    depends_on:
+      - mongodb
+      - redis
+      - minio
+    networks:
+      - trainer-match-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: trainer-match-frontend
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:3000
+    ports:
+      - "3001:3000"
+    depends_on:
+      - backend
+    networks:
+      - trainer-match-network
+
+volumes:
+  mongodb_data:
+  minio_data:
+
+networks:
+  trainer-match-network:
+    driver: bridge

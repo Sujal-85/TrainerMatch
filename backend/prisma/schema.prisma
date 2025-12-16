@@ -1,0 +1,340 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  SUPER_ADMIN
+  VENDOR_ADMIN
+  VENDOR_USER
+  TRAINER
+}
+
+
+model User {
+  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  email          String    @unique
+  passwordHash   String?
+  firebaseUid    String?   @unique
+  role           Role      @default(VENDOR_ADMIN)
+  vendorId       String?   @db.ObjectId
+  vendor         Vendor?   @relation(fields: [vendorId], references: [id])
+  trainer        Trainer?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model Vendor {
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String?
+  website     String?
+  users       User[]
+  colleges    College[]
+  requirements Requirement[]
+  trainers    Trainer[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model College {
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String?
+  website     String?
+  address     String?
+  city        String?
+  state       String?
+  country     String?
+  pincode     String?
+  vendorId    String      @db.ObjectId
+  vendor      Vendor      @relation(fields: [vendorId], references: [id])
+  contacts    Contact[]
+  requirements Requirement[]
+  sessions    Session[]
+  documents   Document[]  // Added relation
+  
+  // CRM Fields
+  status           String      @default("Proposal Prepared") // Pipeline stage
+  nextFollowUpDate DateTime?
+  lastAction       String?
+  probability      Int?        // 0-100%
+  activities       CollegeActivity[]
+
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model CollegeActivity {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  collegeId   String   @db.ObjectId
+  college     College  @relation(fields: [collegeId], references: [id])
+  type        String   // NOTE, EMAIL, STATUS_CHANGE, CALL, MEETING
+  description String
+  performedBy String?  // User ID or "System"
+  createdAt   DateTime @default(now())
+}
+
+model Contact {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  email     String?
+  phone     String?
+  collegeId String   @db.ObjectId
+  college   College  @relation(fields: [collegeId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Requirement {
+  id              String       @id @default(auto()) @map("_id") @db.ObjectId
+  title           String
+  description     String
+  tags            String[]
+  budgetMin       Float?
+  budgetMax       Float?
+  startDate       DateTime?
+  endDate         DateTime?
+  location        String?
+  collegeId       String       @db.ObjectId
+  college         College      @relation(fields: [collegeId], references: [id])
+  vendorId        String       @db.ObjectId
+  vendor          Vendor       @relation(fields: [vendorId], references: [id])
+  proposals       Proposal[]
+  collegeProposals CollegeProposal[] // New relation
+  matches         Match[]
+  documents       Document[] // Added relation
+  status          ReqStatus    @default(DRAFT)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+}
+
+enum ReqStatus {
+  DRAFT
+  PUBLISHED
+  ASSIGNED
+  COMPLETED
+  CANCELLED
+}
+
+model CollegeProposal {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  requirementId String      @db.ObjectId
+  requirement   Requirement @relation(fields: [requirementId], references: [id])
+  
+  // AI Generated / Editable Fields
+  title         String
+  modules       String[]
+  timeline      String
+  trainerCount  Int
+  costing       Float
+  vendorInfo    Json?       // snapshot of vendor info
+  collegeInfo   Json?       // snapshot of college info
+  terms         String      // Terms & Conditions
+  signature     String?
+  
+  status        PropStatus  @default(DRAFT) // Reuse PropStatus or new enum
+  
+  pdfUrl        String?     // Link to generated PDF
+  emailTemplate String?     // ID of email template or content
+  
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model Proposal {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  requirementId String      @db.ObjectId
+  requirement   Requirement @relation(fields: [requirementId], references: [id])
+  trainerId     String      @db.ObjectId
+  trainer       Trainer     @relation(fields: [trainerId], references: [id])
+  content       String
+  cost          Float
+  duration      Int         // in days
+  status        PropStatus  @default(DRAFT)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+enum PropStatus {
+  DRAFT
+  SUBMITTED
+  ACCEPTED
+  REJECTED
+  WITHDRAWN
+}
+
+model Trainer {
+  id              String              @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String?    @unique  @db.ObjectId
+  user            User?               @relation(fields: [userId], references: [id])
+  name            String
+  email           String              @unique
+  phone           String?
+  bio             String?
+  skills          String[]
+  domain          String[]            // New: Technical specializations
+  profilePicture  String?             // New: Profile Image URL
+  experience      Float?              // New: Years of experience
+  rating          Float?              // New: Aggregate rating
+  tags            String[]
+  hourlyRate      Float?
+  location        String?             // City, State format
+  latitude        Float?
+  longitude       Float?
+  availability    TrainerAvailability[]
+  proposals       Proposal[]
+  matches         Match[]
+  sessions        Session[]
+  ratings         Rating[]
+  documents       Document[] // Added relation
+  vendorId        String?             @db.ObjectId
+  vendor          Vendor?             @relation(fields: [vendorId], references: [id])
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+}
+
+model TrainerAvailability {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  trainerId    String   @db.ObjectId
+  trainer      Trainer  @relation(fields: [trainerId], references: [id])
+  date         DateTime
+  startTime    DateTime
+  endTime      DateTime
+  isAvailable  Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Match {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  requirementId String   @db.ObjectId
+  requirement   Requirement @relation(fields: [requirementId], references: [id])
+  trainerId     String   @db.ObjectId
+  trainer       Trainer  @relation(fields: [trainerId], references: [id])
+  score         Float
+  explanation   String
+  status        MatchStatus @default(PENDING)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+enum MatchStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  ESCALATED
+}
+
+model Session {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String?
+  startTime   DateTime
+  endTime     DateTime
+  location    String?    // Physical or Virtual location
+  topic       String?    // Detailed topic if different from title
+  notes       String?    // Private notes for vendor/admin
+  attendance  Json?      // JSON array of student IDs or names present
+  feedback    String?    // Feedback from trainer
+  feedbackRating Int?    // 1-5 rating of the session by trainer
+  
+  trainerId   String   @db.ObjectId
+  trainer     Trainer  @relation(fields: [trainerId], references: [id])
+  collegeId   String   @db.ObjectId
+  college     College  @relation(fields: [collegeId], references: [id])
+  
+  status      SessionStatus @default(SCHEDULED)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum SessionStatus {
+  SCHEDULED
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+
+model Document {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  url       String
+  type      DocumentType @default(OTHER)
+  folderName String? // e.g. College Name
+
+  collegeId String? @db.ObjectId
+  college   College? @relation(fields: [collegeId], references: [id])
+  
+  requirementId String? @db.ObjectId
+  requirement Requirement? @relation(fields: [requirementId], references: [id])
+  
+  trainerId String? @db.ObjectId
+  trainer   Trainer? @relation(fields: [trainerId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum DocumentType {
+  PROPOSAL
+  INVOICE
+  REPORT
+  CONTRACT
+  OTHER
+}
+
+model Notification {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  recipientId String   @db.ObjectId
+  recipientType String // USER, TRAINER
+  title       String
+  message     String
+  isRead      Boolean  @default(false)
+  type        NotifType
+  entityId    String?  @db.ObjectId
+  entityType  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum NotifType {
+  REQUIREMENT_PUBLISHED
+  PROPOSAL_SUBMITTED
+  PROPOSAL_ACCEPTED
+  MATCH_SUGGESTED
+  SESSION_SCHEDULED
+  SESSION_REMINDER
+  PAYMENT_DUE
+}
+
+model Rating {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  trainerId   String   @db.ObjectId
+  trainer     Trainer  @relation(fields: [trainerId], references: [id])
+  ratedById   String   @db.ObjectId
+  ratedByType String   // USER, VENDOR
+  score       Int      // 1-5 stars
+  comment     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model AuditLog {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String?  @db.ObjectId
+  action      String
+  entityType  String
+  entityId    String   @db.ObjectId
+  oldValue    String?
+  newValue    String?
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

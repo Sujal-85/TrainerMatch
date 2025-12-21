@@ -169,10 +169,10 @@ export default function Pricing() {
 
                                     <div className="mb-8">
                                         {isCustom ? (
-                                            <span className="text-4xl font-extrabold text-slate-900">{plan.price}</span>
+                                            <span className="text-4xl font-extrabold text-slate-900">{String(price || 'Custom')}</span>
                                         ) : (
                                             <div className="flex items-baseline gap-1">
-                                                <span className="text-4xl font-extrabold text-slate-900">₹{(price as number || 0).toLocaleString()}</span>
+                                                <span className="text-4xl font-extrabold text-slate-900">₹{Number(price || 0).toLocaleString()}</span>
                                                 <span className="text-slate-400 font-medium">/mo</span>
                                             </div>
                                         )}

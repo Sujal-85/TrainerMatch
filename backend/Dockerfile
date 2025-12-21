@@ -1,6 +1,11 @@
 # Use Node.js 20 slim as base image
 FROM node:20-slim
 
+# Install OpenSSL and other dependencies
+RUN apt-get update -y && \
+    apt-get install -y openssl ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
+
 # Set working directory
 WORKDIR /app
 

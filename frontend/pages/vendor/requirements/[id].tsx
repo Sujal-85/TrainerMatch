@@ -63,17 +63,17 @@ export default function RequirementMatches() {
                         <title>AI Matching Engine | Avalytics</title>
                     </Head>
 
-                    {/* Premium Header */}
-                    <div className="relative bg-[#020617] text-white pb-32 pt-12 px-6 overflow-hidden">
-                        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-transparent to-cyan-500/20 opacity-50"></div>
-                        <div className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-blue-600/10 rounded-full blur-[100px]"></div>
-                        <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-cyan-500/10 rounded-full blur-[100px]"></div>
+                    {/* Premium Header - Reverted to Blue Theme */}
+                    <div className="relative bg-gradient-to-br from-blue-700 via-blue-800 to-indigo-900 text-white pb-32 pt-12 px-6 overflow-hidden">
+                        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-soft-light"></div>
+                        <div className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-white/10 rounded-full blur-[100px]"></div>
+                        <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-blue-400/10 rounded-full blur-[100px]"></div>
 
                         <div className="container mx-auto relative z-10">
                             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                                 <div>
                                     <div className="flex items-center gap-2 mb-3">
-                                        <Badge className="bg-blue-500/20 text-blue-300 border-blue-500/30 hover:bg-blue-500/30 px-3 py-1">
+                                        <Badge className="bg-white/20 text-blue-50 border-white/20 hover:bg-white/30 px-3 py-1 backdrop-blur-md">
                                             <SparklesIcon className="w-3 h-3 mr-1.5" />
                                             AI Matching Active
                                         </Badge>

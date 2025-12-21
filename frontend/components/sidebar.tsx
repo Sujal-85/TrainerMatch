@@ -107,16 +107,18 @@ export default function Sidebar() {
       >
         <div className="flex h-full flex-col bg-gradient-to-b from-blue-50/50 via-white to-white">
           {/* Logo & Header */}
-          <div className="flex h-20 items-center justify-center border-b border-blue-100 px-6">
+          <div className="flex h-20 items-center px-6 border-b border-blue-100/50">
             <Link href="/" className="flex items-center gap-3 group" onClick={() => setIsOpen(false)}>
-              <div className="relative transform group-hover:scale-110 transition-transform duration-300">
-                <img
-                  src="/image.png"
-                  alt="Avalytics Logo"
-                  className="h-32 w-64 object-contain drop-shadow-md"
-                />
+              <div className="relative transform group-hover:scale-105 transition-transform duration-500">
+                <div className="flex items-center gap-2">
+                  <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
+                    <Sparkles className="h-6 w-6 text-white" />
+                  </div>
+                  <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-700">
+                    Avalytics
+                  </span>
+                </div>
               </div>
-
             </Link>
           </div>
 

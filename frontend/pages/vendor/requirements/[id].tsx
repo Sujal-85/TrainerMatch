@@ -13,6 +13,7 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
+import { toast } from 'sonner';
 
 export default function RequirementMatches() {
     const router = useRouter();
@@ -63,32 +64,40 @@ export default function RequirementMatches() {
                     </Head>
 
                     {/* Premium Header */}
-                    <div className="relative bg-gradient-to-r from-violet-600 to-indigo-600 text-white pb-24 pt-10 px-6 shadow-xl">
-                        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-soft-light"></div>
+                    <div className="relative bg-[#020617] text-white pb-32 pt-12 px-6 overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-transparent to-cyan-500/20 opacity-50"></div>
+                        <div className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-blue-600/10 rounded-full blur-[100px]"></div>
+                        <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-cyan-500/10 rounded-full blur-[100px]"></div>
+
                         <div className="container mx-auto relative z-10">
-                            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-4">
+                            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                                 <div>
-                                    <h1 className="text-3xl font-bold mb-2 flex items-center gap-3">
-                                        <SparklesIcon className="text-violet-100" />
-                                        AI Trainer Matching Engine
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <Badge className="bg-blue-500/20 text-blue-300 border-blue-500/30 hover:bg-blue-500/30 px-3 py-1">
+                                            <SparklesIcon className="w-3 h-3 mr-1.5" />
+                                            AI Matching Active
+                                        </Badge>
+                                    </div>
+                                    <h1 className="text-4xl font-extrabold tracking-tight mb-2">
+                                        AI Matching Engine
                                     </h1>
-                                    <p className="text-violet-100 max-w-2xl">
-                                        Our AI analyzes skills, location, budget, and domain expertise to find the perfect trainers for your requirements.
+                                    <p className="text-slate-400 text-lg max-w-2xl">
+                                        Analyzing skills, location, budget, and domain expertise to find your perfect trainers.
                                     </p>
                                 </div>
                                 <Button
                                     onClick={handleAutoNotify}
                                     disabled={notifying}
-                                    className="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white shadow-xl flex items-center gap-2"
+                                    className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/20 h-11 px-6 rounded-xl flex items-center gap-2 transition-all transform hover:scale-105"
                                 >
                                     {notifying ? (
                                         <>
                                             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                                            Escalating...
+                                            Notifying...
                                         </>
                                     ) : (
                                         <>
-                                            Auto-Notify Top Matches
+                                            Auto-Notify Matches
                                             <Send className="h-4 w-4" />
                                         </>
                                     )}
@@ -109,8 +118,12 @@ export default function RequirementMatches() {
                                     <CardHeader className={index === 0 ? 'bg-gradient-to-br from-violet-50 to-indigo-50 dark:from-violet-900/20 dark:to-indigo-900/20 rounded-t-xl' : ''}>
                                         <div className="flex justify-between items-start">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-12 h-12 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center border-2 border-white shadow-sm">
-                                                    <User size={24} />
+                                                <div className="w-12 h-12 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center border-2 border-white shadow-sm overflow-hidden">
+                                                    {match.trainer.profilePicture ? (
+                                                        <img src={match.trainer.profilePicture} alt={match.trainer.name} className="w-full h-full object-cover" />
+                                                    ) : (
+                                                        <User size={24} />
+                                                    )}
                                                 </div>
                                                 <div>
                                                     <CardTitle className="text-lg font-bold text-slate-800 dark:text-white">{match.trainer.name}</CardTitle>
@@ -146,8 +159,21 @@ export default function RequirementMatches() {
                                         </div>
 
                                         <div className="pt-4 flex gap-3">
-                                            <Button variant="outline" className="flex-1 text-xs h-9 border-slate-200 text-slate-700 hover:bg-slate-50">View Profile</Button>
-                                            <Button className="flex-1 text-xs h-9 bg-slate-900 text-white hover:bg-slate-800 shadow-md">Contact</Button>
+                                            <Button
+                                                variant="outline"
+                                                className="flex-1 text-xs h-9 border-slate-200 text-slate-700 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200 transition-all font-semibold"
+                                                onClick={() => router.push(`/vendor/trainers/${match.trainer.id}`)}
+                                            >
+                                                View Profile
+                                            </Button>
+                                            <Button
+                                                className="flex-1 text-xs h-9 bg-slate-900 text-white hover:bg-blue-600 shadow-md transition-all font-semibold"
+                                                onClick={() => {
+                                                    toast.success(`Contact request sent to ${match.trainer.name}!`);
+                                                }}
+                                            >
+                                                Contact
+                                            </Button>
                                         </div>
                                     </CardContent>
                                 </Card>

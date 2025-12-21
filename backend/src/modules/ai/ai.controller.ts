@@ -16,7 +16,7 @@ export class AiController {
     }
 
     @Post('interpret-requirements')
-    @Roles('VENDOR_ADMIN', 'VENDOR_USER', 'VENDOR', 'vendor')
+    @Roles('VENDOR_ADMIN', 'VENDOR_USER', 'VENDOR', 'vendor', 'super_admin', 'SUPER_ADMIN')
     async interpretRequirements(@Body() body: { text: string }) {
         return this.aiService.interpretRequirements(body.text);
     }

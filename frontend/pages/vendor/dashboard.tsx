@@ -100,26 +100,36 @@ export default function VendorDashboard() {
                 <Sidebar />
                 <main className="md:ml-64 pt-0 transition-all duration-300 min-h-screen bg-slate-50/50">
                     {/* Premium Header */}
-                    <div className="relative bg-gradient-to-r from-blue-600 to-cyan-600 text-white pb-24 pt-10 px-6 shadow-xl">
-                        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-soft-light"></div>
+                    <div className="relative bg-[#020617] text-white pb-32 pt-12 px-6 overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-transparent to-cyan-500/20 opacity-50"></div>
+                        <div className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-blue-600/10 rounded-full blur-[100px]"></div>
+                        <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-cyan-500/10 rounded-full blur-[100px]"></div>
+
                         <div className="container mx-auto relative z-10">
-                            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-4">
+                            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                                 <div>
-                                    <h1 className="text-3xl font-bold mb-2 flex items-center gap-3">
-                                        <Activity className="text-blue-100" size={32} />
-                                        Dashboard
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <Badge className="bg-blue-500/20 text-blue-300 border-blue-500/30 hover:bg-blue-500/30 px-3 py-1">
+                                            <Activity className="w-3 h-3 mr-1.5" />
+                                            Live Overview
+                                        </Badge>
+                                    </div>
+                                    <h1 className="text-4xl font-extrabold tracking-tight mb-2">
+                                        Vendor Dashboard
                                     </h1>
-                                    <p className="text-blue-100">
-                                        Overview of your training operations and performance.
+                                    <p className="text-slate-400 text-lg max-w-xl">
+                                        Monitor your training operations, performance metrics, and growth in real-time.
                                     </p>
                                 </div>
-                                <Button
-                                    onClick={handleDownloadReport}
-                                    className="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white shadow-xl"
-                                >
-                                    <ArrowUpRight className="w-4 h-4 mr-2" />
-                                    Download Report
-                                </Button>
+                                <div className="flex gap-3">
+                                    <Button
+                                        onClick={handleDownloadReport}
+                                        className="bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 text-white shadow-2xl h-11 px-6 rounded-xl transition-all"
+                                    >
+                                        <ArrowUpRight className="w-4 h-4 mr-2" />
+                                        Export Analytics
+                                    </Button>
+                                </div>
                             </div>
                         </div>
                     </div>

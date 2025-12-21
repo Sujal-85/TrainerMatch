@@ -8,6 +8,9 @@ import {
 } from 'lucide-react';
 import Sidebar from '../../../components/sidebar';
 import Link from 'next/link';
+import Head from 'next/head';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 
 import api from '@/lib/api';
 
@@ -51,25 +54,34 @@ const CollegeDirectory = () => {
             <Sidebar />
 
             <main className="md:ml-64 pt-0 transition-all duration-300 min-h-screen bg-slate-50/50">
-                {/* Header Section with Gradient Background */}
-                <div className="relative bg-gradient-to-r from-blue-600 to-cyan-600 text-white pb-24 pt-10 px-6 shadow-xl">
-                    <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-soft-light"></div>
+                <Head>
+                    <title>College CRM | Avalytics</title>
+                </Head>
+
+                {/* Premium Header */}
+                <div className="relative bg-[#020617] text-white pb-32 pt-12 px-6 overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-transparent to-cyan-500/20 opacity-50"></div>
+                    <div className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-blue-600/10 rounded-full blur-[100px]"></div>
+                    <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-cyan-500/10 rounded-full blur-[100px]"></div>
+
                     <div className="container mx-auto relative z-10">
-                        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-4">
+                        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                             <div>
-                                <h1 className="text-3xl font-bold mb-2 flex items-center gap-3">
-                                    <Building2 className="text-blue-100" size={32} />
+                                <div className="flex items-center gap-2 mb-3">
+                                    <Badge className="bg-blue-500/20 text-blue-300 border-blue-500/30 hover:bg-blue-500/30 px-3 py-1">
+                                        <Building2 className="w-3 h-3 mr-1.5" />
+                                        Active Pipeline
+                                    </Badge>
+                                </div>
+                                <h1 className="text-4xl font-extrabold tracking-tight mb-2">
                                     College CRM
                                 </h1>
-                                <p className="text-blue-100">
-                                    Manage relationships, proposals, and pipeline stages.
+                                <p className="text-slate-400 text-lg max-w-2xl">
+                                    Manage your college relationships, track proposals, and automate follow-ups.
                                 </p>
                             </div>
-
                             <div className="flex gap-3">
-                                <motion.button
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
+                                <Button
                                     onClick={async () => {
                                         const toastId = toast.loading('Running AI Agent...');
                                         try {
@@ -78,23 +90,21 @@ const CollegeDirectory = () => {
                                             fetchColleges(); // Refresh list to show status changes
                                         } catch (e: any) {
                                             console.error(e);
-                                            toast.error(e?.response?.data?.message || 'Failed to trigger AI Agent. Ensure you are an Admin.', { id: toastId });
+                                            toast.error(e?.response?.data?.message || 'Failed to trigger AI Agent.', { id: toastId });
                                         }
                                     }}
-                                    className="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white px-6 py-2.5 rounded-xl font-medium flex items-center gap-2 transition-colors"
+                                    className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/20 h-11 px-6 rounded-xl flex items-center gap-2 transition-all transform hover:scale-105"
                                 >
                                     <Sparkles size={20} />
                                     Run AI Agent
-                                </motion.button>
+                                </Button>
                                 <Link href="/vendor/colleges/new">
-                                    <motion.button
-                                        whileHover={{ scale: 1.02 }}
-                                        whileTap={{ scale: 0.98 }}
-                                        className="bg-white text-blue-600 hover:bg-blue-50 px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-blue-900/20 transition-colors"
+                                    <Button
+                                        className="bg-white text-blue-600 hover:bg-blue-50 px-6 h-11 rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-blue-900/10 transition-all border border-blue-100"
                                     >
                                         <Plus size={20} />
                                         Add New College
-                                    </motion.button>
+                                    </Button>
                                 </Link>
                             </div>
                         </div>
@@ -126,7 +136,6 @@ const CollegeDirectory = () => {
                         </div>
                     </div>
 
-                    {/* College List Grid */}
                     {/* College List Grid */}
                     {filteredColleges.length > 0 ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">

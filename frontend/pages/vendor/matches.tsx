@@ -7,6 +7,7 @@ import { Spinner } from '@/components/ui/spinner';
 import Sidebar from '@/components/sidebar';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { Users, ChevronRight, Search, Zap } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
 import api from '@/lib/api';
 
@@ -48,17 +49,34 @@ export default function Matches() {
 
         <Sidebar />
 
-        <main className="md:pl-64 pt-0 transition-all duration-300 min-h-screen">
-          {/* Header Section */}
-          <div className="relative bg-gradient-to-r from-blue-600 to-cyan-600 text-white pb-24 pt-10 px-6 shadow-xl">
-            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-soft-light"></div>
+        <main className="md:ml-64 pt-0 transition-all duration-300 min-h-screen bg-slate-50/50">
+          {/* Premium Header */}
+          <div className="relative bg-[#020617] text-white pb-32 pt-12 px-6 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-transparent to-cyan-500/20 opacity-50"></div>
+            <div className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-blue-600/10 rounded-full blur-[100px]"></div>
+            <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-cyan-500/10 rounded-full blur-[100px]"></div>
+
             <div className="container mx-auto relative z-10">
-              <h1 className="text-3xl font-bold mb-2">Trainer Matches</h1>
-              <p className="text-blue-100">Select a requirement to view the best matched trainers.</p>
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                <div>
+                  <div className="flex items-center gap-2 mb-3">
+                    <Badge className="bg-blue-500/20 text-blue-300 border-blue-500/30 hover:bg-blue-500/30 px-3 py-1">
+                      <Zap className="w-3 h-3 mr-1.5 fill-blue-400 text-blue-400" />
+                      Live Matching
+                    </Badge>
+                  </div>
+                  <h1 className="text-4xl font-extrabold tracking-tight mb-2">
+                    Trainer Matches
+                  </h1>
+                  <p className="text-slate-400 text-lg max-w-2xl">
+                    Select a requirement to discover the most qualified trainers handpicked by our AI.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="container mx-auto px-6 -mt-16 relative z-20 pb-10">
+          <div className="container mx-auto px-6 -mt-20 relative z-20 pb-10">
             {loading ? (
               <div className="flex min-h-[400px] items-center justify-center">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>

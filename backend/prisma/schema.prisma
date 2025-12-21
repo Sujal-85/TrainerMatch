@@ -37,6 +37,10 @@ model Vendor {
   colleges    College[]
   requirements Requirement[]
   trainers    Trainer[]
+
+  subscriptionId String?     @db.ObjectId
+  subscription   Subscription? @relation(fields: [subscriptionId], references: [id])
+
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
 }
@@ -267,7 +271,7 @@ model Document {
   url       String
   type      DocumentType @default(OTHER)
   folderName String? // e.g. College Name
-
+ 
   collegeId String? @db.ObjectId
   college   College? @relation(fields: [collegeId], references: [id])
   
@@ -337,4 +341,48 @@ model AuditLog {
   userAgent   String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model Subscription {
+  id              String             @id @default(auto()) @map("_id") @db.ObjectId
+  vendorId        String             @unique @db.ObjectId
+  vendors         Vendor[]           // Relation back to Vendor
+  
+  razorpaySubId   String             @unique // Razorpay Subscription ID
+  razorpayPlanId  String
+  razorpayCustId  String?            // Razorpay Customer ID
+  
+  status          SubscriptionStatus @default(PENDING)
+  planType        PlanType
+  billingCycle    BillingCycle
+  
+  currentStart    DateTime
+  currentEnd      DateTime
+  trialStart      DateTime?
+  trialEnd        DateTime?
+  
+  cancelAtPeriodEnd Boolean          @default(false)
+  
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+}
+
+enum SubscriptionStatus {
+  PENDING
+  ACTIVE
+  HALTED
+  CANCELLED
+  COMPLETED
+  EXPIRED
+}
+
+enum PlanType {
+  STARTER
+  MASTER
+  CUSTOM
+}
+
+enum BillingCycle {
+  MONTHLY
+  YEARLY
 }

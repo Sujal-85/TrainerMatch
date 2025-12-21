@@ -24,22 +24,26 @@ export class FirebaseStrategy extends PassportStrategy(Strategy, 'firebase-jwt')
                 });
             }
 
+            console.log('Validating Firebase Token...');
             const firebaseUser = await firebaseAdmin
                 .auth()
                 .verifyIdToken(token);
 
+            console.log('Firebase user verified:', firebaseUser.email);
+
             if (!firebaseUser) {
+                console.error('Firebase verification returned null user');
                 throw new UnauthorizedException();
             }
 
             const user = await this.authService.validateFirebaseUser(firebaseUser);
             if (!user) {
-                // If service returns null, user is not in DB and not new (shouldn't happen with updated service)
+                console.error('User not found in system for email:', firebaseUser.email);
                 throw new UnauthorizedException('User not found in system');
             }
             return user;
         } catch (err) {
-            console.log(err);
+            console.error('Firebase Auth Error:', err.message || err);
             throw new UnauthorizedException();
         }
     }

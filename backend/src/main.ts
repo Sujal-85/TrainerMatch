@@ -5,17 +5,24 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  
+
   // Enable validation pipes globally
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
     forbidNonWhitelisted: true,
     transform: true,
   }));
-  
+
   // Enable CORS for frontend communication
-  app.enableCors();
-  
+  app.enableCors({
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:3001',
+      process.env.FRONTEND_URL || 'https://your-vercel-app.vercel.app', // Update this with your actual Vercel URL
+    ],
+    credentials: true,
+  });
+
   // Setup Swagger documentation
   const config = new DocumentBuilder()
     .setTitle('TrainerMatch API')
@@ -25,7 +32,7 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
-  
+
   const port = process.env.PORT || 3000;
   await app.listen(port);
   console.log(`Application is running on: http://localhost:${port}`);

@@ -34,8 +34,10 @@ export default function Header() {
   const { user, userRole } = useAuth();
 
   const getDashboardLink = () => {
-    if (userRole === 'VENDOR_ADMIN' || userRole === 'VENDOR_USER') return '/vendor/dashboard';
-    if (userRole === 'TRAINER') return '/trainer/dashboard';
+    if (!userRole) return '/dashboard';
+    const role = userRole.toUpperCase();
+    if (role === 'VENDOR_ADMIN' || role === 'VENDOR_USER') return '/vendor/dashboard';
+    if (role === 'TRAINER') return '/trainer/dashboard';
     return '/admin/dashboard';
   };
 

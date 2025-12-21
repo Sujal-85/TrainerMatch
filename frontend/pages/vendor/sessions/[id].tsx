@@ -148,7 +148,7 @@ export default function SessionDetail() {
                                         ) : (
                                             <Dialog>
                                                 <DialogTrigger asChild>
-                                                    <Button className="w-full bg-slate-900 text-white">Submit Feedback</Button>
+                                                    <Button className="w-full bg-blue-700 text-white">Submit Feedback</Button>
                                                 </DialogTrigger>
                                                 <DialogContent>
                                                     <DialogHeader><DialogTitle>Session Feedback</DialogTitle></DialogHeader>
@@ -161,7 +161,7 @@ export default function SessionDetail() {
                                                             <Label>Comments</Label>
                                                             <Textarea value={feedback} onChange={e => setFeedback(e.target.value)} placeholder="How did the session go?" />
                                                         </div>
-                                                        <Button onClick={handleFeedback} disabled={submitting} className="w-full">
+                                                        <Button onClick={handleFeedback} disabled={submitting} className="w-full bg-blue-500">
                                                             {submitting ? 'Submitting...' : 'Submit Feedback'}
                                                         </Button>
                                                     </div>

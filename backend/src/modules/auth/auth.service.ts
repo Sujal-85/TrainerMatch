@@ -36,11 +36,12 @@ export class AuthService {
 
   async register(email: string, password: string, role: string, vendorId?: string) {
     const hashedPassword = await this.hashPassword(password);
+    const normalizedRole = role ? role.toUpperCase() : 'VENDOR_ADMIN';
     return this.usersService.create({
       email,
       password,
       passwordHash: hashedPassword,
-      role,
+      role: normalizedRole,
       vendorId,
     });
   }
@@ -59,25 +60,6 @@ export class AuthService {
     const user = await this.usersService.findByEmail(email);
 
     if (!user) {
-      // DEV/TEST HELPER:
-      // If user doesn't exist in Postgres but exists in Firebase,
-      // and we have a seed vendor, auto-link them to the first vendor found
-      // so they can login immediately as a Vendor Admin.
-
-      const seedVendor = await this.usersService.findFirstVendor();
-      if (seedVendor) {
-        console.log(`Auto-linking new user ${email} to vendor ${seedVendor.name}`);
-        const newUser = await this.usersService.create({
-          email,
-          password: '',
-          passwordHash: null,
-          role: 'VENDOR_ADMIN',
-          firebaseUid: uid,
-          vendorId: seedVendor.id
-        });
-        return newUser;
-      }
-
       // Return basic firebase info if user needs to be registered manually
       return {
         email,
@@ -102,15 +84,34 @@ export class AuthService {
     const { role } = data;
     let vendorId = undefined;
 
-    // If role is vendor, create the organization
-    if (role === 'vendor' || role === 'VENDOR_ADMIN') {
+    // Normalize role
+    let normalizedRole = role ? role.toUpperCase() : undefined;
+    if (normalizedRole === 'VENDOR') normalizedRole = 'VENDOR_ADMIN';
+    if (normalizedRole === 'TRAINER') normalizedRole = 'TRAINER';
+
+    // Check if user already exists
+    const existingUser = await this.usersService.findByEmail(email);
+
+    // If role is vendor, create the organization if not already linked
+    if ((normalizedRole === 'VENDOR_ADMIN') && (!existingUser || !existingUser.vendorId)) {
       const vendorName = data.companyName || (email.split('@')[0] + "'s Organization");
       const vendor = await this.usersService.createVendorForUser(vendorName);
       vendorId = vendor.id;
     }
 
-    // Create the user
-    let finalRole = role === 'vendor' ? 'VENDOR_ADMIN' : 'TRAINER';
+    if (existingUser) {
+      // Update existing user with role and vendorId if provided
+      const finalRole = normalizedRole || existingUser.role;
+      return this.usersService.update(existingUser.id, {
+        role: finalRole,
+        vendorId: vendorId || existingUser.vendorId,
+        firebaseUid: uid || existingUser.firebaseUid
+      });
+    }
+
+    // Create the user if it doesn't exist
+    let finalRole = normalizedRole || 'TRAINER';
+    if (finalRole === 'VENDOR') finalRole = 'VENDOR_ADMIN';
 
     // Hardcode Admin for specific email request
     if (email.toLowerCase() === 'admin@gmail.com') {

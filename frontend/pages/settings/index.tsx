@@ -19,6 +19,7 @@ import {
   Check
 } from 'lucide-react';
 import Sidebar from '@/components/sidebar';
+import BillingSettings from '@/components/settings/billing';
 
 export default function Settings() {
   const [activeTab, setActiveTab] = useState('profile');
@@ -133,8 +134,8 @@ export default function Settings() {
                           key={tab.id}
                           variant={isActive ? 'default' : 'ghost'}
                           className={`w-full justify-start text-sm font-medium transition-all duration-200 ${isActive
-                              ? 'bg-blue-600 text-white shadow-md shadow-blue-500/30'
-                              : 'text-slate-600 hover:bg-blue-50 hover:text-blue-600'
+                            ? 'bg-blue-600 text-white shadow-md shadow-blue-500/30'
+                            : 'text-slate-600 hover:bg-blue-50 hover:text-blue-600'
                             }`}
                           onClick={() => setActiveTab(tab.id)}
                         >
@@ -393,48 +394,8 @@ export default function Settings() {
                     )}
 
                     {activeTab === 'billing' && (
-                      <div className="space-y-6 animate-in fade-in duration-500">
-                        <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-xl p-6 text-white shadow-lg relative overflow-hidden">
-                          <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl transform translate-x-10 -translate-y-10"></div>
-                          <div className="relative z-10 flex justify-between items-start">
-                            <div>
-                              <p className="text-slate-400 text-sm mb-1">Current Plan</p>
-                              <h3 className="text-2xl font-bold mb-4">Professional</h3>
-                              <p className="text-3xl font-bold">$299<span className="text-lg text-slate-400 font-normal">/month</span></p>
-                            </div>
-                            <Badge className="bg-blue-600 hover:bg-blue-700 border-none">Active</Badge>
-                          </div>
-                          <div className="relative z-10 mt-6 pt-6 border-t border-white/10 flex gap-4">
-                            <Button variant="secondary" className="bg-white text-slate-900 hover:bg-slate-100">Upgrade Plan</Button>
-                            <Button variant="ghost" className="text-white hover:bg-white/10">Billing Details</Button>
-                          </div>
-                        </div>
-
-                        <div>
-                          <h3 className="font-medium text-slate-800 mb-4">Invoices</h3>
-                          <div className="border border-slate-200 rounded-xl overflow-hidden">
-                            {[
-                              { date: 'Jun 01, 2023', amount: '$299.00', status: 'Paid', invoice: '#INV-001' },
-                              { date: 'May 01, 2023', amount: '$299.00', status: 'Paid', invoice: '#INV-002' },
-                              { date: 'Apr 01, 2023', amount: '$299.00', status: 'Paid', invoice: '#INV-003' },
-                            ].map((inv, i) => (
-                              <div key={i} className="flex items-center justify-between p-4 border-b border-slate-100 last:border-0 hover:bg-slate-50">
-                                <div className="flex items-center gap-4">
-                                  <div className="p-2 bg-slate-100 rounded text-slate-500"><FileText className="h-4 w-4" /></div>
-                                  <div>
-                                    <p className="font-medium text-slate-700">{inv.date}</p>
-                                    <p className="text-xs text-slate-400">{inv.invoice}</p>
-                                  </div>
-                                </div>
-                                <div className="flex items-center gap-4">
-                                  <span className="font-medium text-slate-700">{inv.amount}</span>
-                                  <Badge variant="outline" className="text-green-600 bg-green-50 border-green-100">Paid</Badge>
-                                  <Button variant="ghost" size="icon" className="h-8 w-8"><Download className="h-4 w-4 text-slate-400" /></Button>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
+                      <div className="animate-in fade-in duration-500">
+                        <BillingSettings />
                       </div>
                     )}
                   </form>

@@ -1,6 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Header from '@/components/header';
@@ -17,9 +18,22 @@ import {
   Target,
   CheckCircle2,
   ArrowRight,
-  Star
+  Star,
+  Globe,
+  ShieldCheck,
+  Headphones,
+  Briefcase,
+  BarChart,
+  MessageCircle,
+  Calendar,
+  Search,
 } from 'lucide-react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import Lottie from 'lottie-react'; // Assuming lottie-react is installed
+
+import animationData1 from './animations/AI data.json'; // Placeholder for Lottie JSON
+import animationData2 from './animations/trainer.json'; // Placeholder
+import animationData3 from './animations/Success.json'; // Placeholder
 
 import { useAuth } from '@/context/AuthContext'; // Import Added
 
@@ -27,14 +41,51 @@ export default function Home() {
   const { user, userRole } = useAuth(); // Hook Added
   const { scrollYProgress } = useScroll();
   const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0.5]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.2]);
 
   const getDestination = () => {
     if (!user) return "/auth/signup";
-    if (userRole === 'VENDOR_ADMIN' || userRole === 'VENDOR_USER') return '/vendor/dashboard';
-    if (userRole === 'TRAINER') return '/trainer/dashboard';
-    return '/admin/dashboard';
+    if (!userRole) return "/dashboard"; // Fallback to a generic loader or common path if role is still loading
+
+    const role = userRole.toUpperCase();
+    if (role === 'VENDOR_ADMIN' || role === 'VENDOR_USER') return '/vendor/dashboard';
+    if (role === 'TRAINER') return '/trainer/dashboard';
+    if (role === 'SUPER_ADMIN' || role === 'ADMIN') return '/admin/dashboard';
+
+    return '/dashboard'; // Safe fallback
   };
 
+  const testimonials = [
+    {
+      name: "John Doe",
+      role: "CEO, TechCorp",
+      quote: "TrainerMatch revolutionized our training programs. The AI matching is spot on!",
+      image: "/images/testimonial1.jpg",
+      rating: 5,
+    },
+    {
+      name: "Jane Smith",
+      role: "HR Director, Innovate Inc.",
+      quote: "We've saved countless hours and found the perfect trainers every time.",
+      image: "/images/testimonial2.jpg",
+      rating: 5,
+    },
+    {
+      name: "Mike Johnson",
+      role: "Learning Manager, Global Edu",
+      quote: "The platform's interface is intuitive, and the results are outstanding.",
+      image: "/images/testimonial3.jpg",
+      rating: 4.5,
+    },
+    {
+      name: "Sarah Lee",
+      role: "Training Coordinator, FutureTech",
+      quote: "Highly recommend for any organization looking to upskill efficiently.",
+      image: "/images/testimonial4.jpg",
+      rating: 5,
+    },
+  ];
 
   return (
     <>
@@ -47,28 +98,31 @@ export default function Home() {
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 overflow-hidden">
         <Header />
 
-        {/* Hero Section - Enhanced Parallax & Animations */}
-        <section className="relative pt-32 pb-24 px-4 overflow-hidden">
+        {/* Hero Section - Enhanced Parallax, Animations, and Lottie */}
+        <section className="relative pt-8 pb-24 px-4 overflow-hidden">
           <motion.div
             className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-cyan-600/5 to-transparent"
-            style={{ y: backgroundY }}
+            style={{ y: backgroundY, opacity }}
           />
 
-          {/* Enhanced floating elements */}
+          {/* Enhanced floating elements with more parallax */}
           <motion.div
             className="absolute top-20 left-10 w-96 h-96 bg-cyan-400/20 rounded-full blur-3xl"
             animate={{ y: [0, -40, 0], x: [0, 30, 0], rotate: [0, 10, 0] }}
             transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
+            style={{ scale }}
           />
           <motion.div
             className="absolute bottom-0 right-0 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl"
             animate={{ y: [0, 40, 0], x: [0, -40, 0], rotate: [0, -15, 0] }}
             transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
+            style={{ scale: useTransform(scrollYProgress, [0, 1], [1, 0.8]) }}
           />
           <motion.div
             className="absolute top-1/3 right-20 w-64 h-64 bg-indigo-400/15 rounded-full blur-3xl"
             animate={{ y: [0, 30, 0], scale: [1, 1.2, 1] }}
             transition={{ duration: 18, repeat: Infinity }}
+            style={{ x: useTransform(scrollYProgress, [0, 1], [0, -50]) }}
           />
 
           <div className="container relative z-10 mx-auto max-w-7xl">
@@ -89,7 +143,7 @@ export default function Home() {
               </motion.div>
 
               <motion.h1
-                className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-slate-900 mb-8 leading-tight tracking-tight"
+                className="text-5xl md:text-6xl lg:text-7xl  text-slate-900 mb-8 leading-[1.1] tracking-tight"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.4, duration: 0.8 }}
@@ -108,6 +162,16 @@ export default function Home() {
               >
                 Harness advanced AI to connect with pre-vetted expert freelance trainers, perfectly aligned with your skills requirements, teaching style, budget, and schedule.
               </motion.p>
+
+              {/* Added Lottie Animation in Hero */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.8, duration: 1 }}
+                className="max-w-md mx-auto mb-12"
+              >
+                <Lottie animationData={animationData1} loop={true} />
+              </motion.div>
 
               <motion.div
                 className="flex flex-col sm:flex-row gap-6 justify-center items-center"
@@ -154,7 +218,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Features Section - Enhanced Staggered Animations */}
+        {/* Features Section - Added More Cards, Enhanced Staggered Animations, Images */}
         <section id="features" className="py-24 px-4 bg-white">
           <div className="container mx-auto max-w-7xl">
             <motion.div
@@ -174,21 +238,27 @@ export default function Home() {
 
             <div className="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto">
               {[
-                { icon: FileText, title: "Define Requirements", desc: "Quickly outline expertise needed, format, timeline, and budget.", color: "from-blue-500 to-blue-600" },
-                { icon: Brain, title: "Intelligent Matching", desc: "AI evaluates 50+ parameters: expertise, feedback, style compatibility, and real-time availability.", color: "from-cyan-500 to-cyan-600" },
-                { icon: Users, title: "Review & Engage", desc: "Access detailed profiles, client testimonials, and schedule interviews instantly.", color: "from-indigo-500 to-indigo-600" },
+                { icon: FileText, title: "Define Requirements", desc: "Quickly outline expertise needed, format, timeline, and budget.", color: "from-blue-500 to-blue-600", image: "/images/define-requirements.jpg" },
+                { icon: Brain, title: "Intelligent Matching", desc: "AI evaluates 50+ parameters: expertise, feedback, style compatibility, and real-time availability.", color: "from-cyan-500 to-cyan-600", image: "/images/intelligent-matching.jpg" },
+                { icon: Users, title: "Review & Engage", desc: "Access detailed profiles, client testimonials, and schedule interviews instantly.", color: "from-indigo-500 to-indigo-600", image: "/images/review-engage.jpg" },
+                { icon: Search, title: "Advanced Search", desc: "Filter trainers by skills, experience, and ratings with powerful search tools.", color: "from-emerald-500 to-emerald-600", image: "/images/advanced-search.jpg" },
+                { icon: Calendar, title: "Schedule Management", desc: "Integrated calendar for seamless booking and availability checks.", color: "from-amber-500 to-amber-600", image: "/images/schedule-management.jpg" },
+                { icon: MessageCircle, title: "Real-time Communication", desc: "Chat and video call features for instant collaboration.", color: "from-purple-500 to-purple-600", image: "/images/real-time-communication.jpg" },
               ].map((step, i) => (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, y: 60 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: i * 0.3, duration: 0.8, ease: "easeOut" }}
+                  transition={{ delay: i * 0.2, duration: 0.8, ease: "easeOut" }}
                   whileHover={{ y: -12, transition: { duration: 0.3 } }}
                 >
                   <Card className="h-full border-0 shadow-2xl hover:shadow-3xl transition-all duration-500 bg-white group relative overflow-hidden">
                     <div className={`absolute inset-0 bg-gradient-to-br ${step.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
                     <CardHeader>
+                      <div className="relative w-full h-40 mb-4 overflow-hidden rounded-t-xl">
+                        <Image src={step.image} alt={step.title} fill className="object-cover transition-transform duration-500 group-hover:scale-110" />
+                      </div>
                       <div className={`w-20 h-20 rounded-3xl bg-gradient-to-br ${step.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-xl`}>
                         <step.icon className="w-10 h-10 text-white" />
                       </div>
@@ -208,7 +278,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Benefits Section - Enhanced with Icons & Hover Effects */}
+        {/* Benefits Section - Added More Cards, Lottie, Enhanced with Icons & Hover Effects */}
         <section className="py-24 px-4 bg-gradient-to-b from-blue-50/50 to-white">
           <div className="container mx-auto max-w-7xl">
             <motion.div
@@ -218,12 +288,22 @@ export default function Home() {
               transition={{ duration: 0.8 }}
               className="text-center mb-20"
             >
-              <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6">
+              <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight">
                 Proven Impact for Organizations
               </h2>
               <p className="text-xl text-slate-600 max-w-3xl mx-auto">
                 Trusted by leading enterprises for faster, higher-quality training partnerships
               </p>
+            </motion.div>
+
+            {/* Added Lottie in Benefits */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1 }}
+              className="max-w-lg mx-auto mb-16"
+            >
+              <Lottie animationData={animationData2} loop={true} />
             </motion.div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-10">
@@ -232,6 +312,10 @@ export default function Home() {
                 { icon: Award, title: "Elite Talent Pool", desc: "Access only top-tier verified trainers", stat: "Top 5% of professionals", color: "amber" },
                 { icon: TrendingUp, title: "Superior Outcomes", desc: "Better matches drive higher engagement", stat: "+47% participant satisfaction", color: "emerald" },
                 { icon: Building2, title: "Enterprise-Ready", desc: "Scalable, secure, and compliant platform", stat: "Used by 500+ companies", color: "indigo" },
+                { icon: Globe, title: "Global Network", desc: "Connect with trainers worldwide", stat: "100+ countries represented", color: "cyan" },
+                { icon: ShieldCheck, title: "Secure & Compliant", desc: "Data protection and compliance built-in", stat: "GDPR & ISO 27001 certified", color: "green" },
+                { icon: Headphones, title: "24/7 Support", desc: "Dedicated assistance anytime", stat: "99.9% uptime guarantee", color: "purple" },
+                { icon: Briefcase, title: "Custom Solutions", desc: "Tailored for your business needs", stat: "Flexible pricing models", color: "orange" },
               ].map((benefit, i) => (
                 <motion.div
                   key={i}
@@ -242,12 +326,12 @@ export default function Home() {
                   transition={{ delay: i * 0.15, duration: 0.7, ease: "easeOut" }}
                   className="relative group"
                 >
-                  <div className={`absolute -inset-2 bg-gradient-to-r from-${benefit.color || 'blue'}-600 to-cyan-600 rounded-3xl blur-lg opacity-30 group-hover:opacity-60 transition duration-700`} />
+                  <div className={`absolute -inset-2 bg-gradient-to-r from-${benefit.color}-600 to-cyan-600 rounded-3xl blur-lg opacity-30 group-hover:opacity-60 transition duration-700`} />
                   <Card className="relative bg-white border-0 shadow-xl hover:shadow-2xl h-full transition-all duration-500">
                     <CardHeader className="text-center pb-4">
-                      <benefit.icon className={`w-16 h-16 mx-auto mb-5 text-${benefit.color || 'blue'}-600 group-hover:scale-110 transition-transform`} />
-                      <CardTitle className="text-2xl font-bold text-slate-900">{benefit.title}</CardTitle>
-                      <p className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-600 mt-4">
+                      <benefit.icon className={`w-16 h-16 mx-auto mb-5 text-${benefit.color}-600 group-hover:scale-110 transition-transform`} />
+                      <CardTitle className="text-lg text-slate-900 ">{benefit.title}</CardTitle>
+                      <p className="text-3xl  text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-600 mt-4 tracking-tighter">
                         {benefit.stat}
                       </p>
                     </CardHeader>
@@ -261,9 +345,133 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Final CTA - More Dramatic */}
+        {/* New Testimonials Section - With Cards, Images, Animations, Lottie */}
+        <section className="py-24 px-4 bg-white">
+          <div className="container mx-auto max-w-7xl">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="text-center mb-20"
+            >
+              <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight">
+                What Our Clients Say
+              </h2>
+              <p className="text-xl text-slate-600 max-w-3xl mx-auto">
+                Hear from organizations transforming their training with TrainerMatch
+              </p>
+            </motion.div>
+
+            {/* Added Lottie in Testimonials */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1 }}
+              className="max-w-md mx-auto mb-16"
+            >
+              <Lottie animationData={animationData3} loop={true} />
+            </motion.div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-10">
+              <AnimatePresence>
+                {testimonials.map((testimonial, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -50 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.2, duration: 0.8 }}
+                    whileHover={{ scale: 1.05, boxShadow: "0 20px 40px rgba(0,0,0,0.1)" }}
+                  >
+                    <Card className="h-full border-0 shadow-xl hover:shadow-2xl transition-all duration-500 bg-gradient-to-br from-white to-blue-50">
+                      <CardHeader className="text-center">
+                        <div className="relative w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden border-4 border-blue-600 shadow-md">
+                          <Image src={testimonial.image} alt={testimonial.name} fill className="object-cover" />
+                        </div>
+                        <CardTitle className="text-xl font-bold text-slate-900">{testimonial.name}</CardTitle>
+                        <CardDescription className="text-base text-slate-600">{testimonial.role}</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-slate-700 text-center italic mb-4">"{testimonial.quote}"</p>
+                        <div className="flex justify-center gap-1">
+                          {Array.from({ length: 5 }).map((_, starIndex) => (
+                            <Star
+                              key={starIndex}
+                              className={`w-5 h-5 ${starIndex < testimonial.rating ? 'text-amber-500 fill-amber-500' : 'text-slate-300'}`}
+                            />
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+          </div>
+        </section>
+
+        {/* New Why Choose Us Section - With More Cards, Parallax Images */}
+        <section className="py-24 px-4 bg-gradient-to-b from-white to-blue-50">
+          <div className="container mx-auto max-w-7xl">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="text-center mb-20"
+            >
+              <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6">
+                Why Choose TrainerMatch?
+              </h2>
+              <p className="text-xl text-slate-600 max-w-3xl mx-auto">
+                Discover the unique advantages that set us apart in trainer matching.
+              </p>
+            </motion.div>
+
+            <div className="grid md:grid-cols-3 gap-10">
+              {[
+                { icon: BarChart, title: "Data-Driven Insights", desc: "Leverage analytics for better decision-making.", image: "/images/data-insights.jpg" },
+                { icon: Briefcase, title: "Industry Expertise", desc: "Specialized in diverse sectors and skills.", image: "/images/industry-expertise.jpg" },
+                { icon: Users, title: "Community Building", desc: "Foster long-term relationships and networks.", image: "/images/community-building.jpg" },
+              ].map((reason, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 60 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.3, duration: 0.8 }}
+                  whileHover={{ y: -12 }}
+                  className="relative"
+                >
+                  <Card className="h-full border-0 shadow-2xl hover:shadow-3xl transition-all duration-500 bg-white overflow-hidden">
+                    <motion.div
+                      className="relative w-full h-48"
+                      style={{ y: useTransform(scrollYProgress, [0, 1], [0, -50]) }} // Parallax effect on image
+                    >
+                      <Image src={reason.image} alt={reason.title} fill className="object-cover" />
+                    </motion.div>
+                    <CardHeader>
+                      <reason.icon className="w-12 h-12 text-blue-600 mx-auto mb-4" />
+                      <CardTitle className="text-2xl font-bold text-slate-900 text-center">{reason.title}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-lg text-slate-600 text-center leading-relaxed">{reason.desc}</p>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Final CTA - More Dramatic, Added Parallax Background */}
         <section className="py-32 px-4 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-cyan-900/10 to-transparent" />
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-cyan-900/10 to-transparent"
+            style={{ scale: useTransform(scrollYProgress, [0, 1], [1, 1.1]) }}
+          />
           <div className="container mx-auto max-w-6xl relative z-10">
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
@@ -321,18 +529,30 @@ export default function Home() {
           </div>
         </section>
 
-        <footer className="py-16 border-t bg-white">
+        <footer className="py-16 border-t bg-gradient-to-b from-white to-slate-50">
           <div className="container mx-auto max-w-7xl text-center">
-            <p className="text-slate-600 text-lg">
-              © {new Date().getFullYear()} TrainerMatch. All rights reserved.
-            </p>
-            <div className="flex justify-center gap-10 mt-8">
-              {['Terms of Service', 'Privacy Policy', 'Contact Us'].map((item) => (
-                <Link key={item} href={`/${item.toLowerCase().replace(/ /g, '-')}`} className="text-slate-500 hover:text-blue-600 transition font-medium">
-                  {item}
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.8 }}
+            >
+              <p className="text-slate-600 text-lg mb-6">
+                © {new Date().getFullYear()} TrainerMatch. All rights reserved.
+              </p>
+              <div className="flex justify-center gap-10 mb-8">
+                {['Terms of Service', 'Privacy Policy', 'Contact Us', 'About Us', 'Blog'].map((item) => (
+                  <Link key={item} href={`/${item.toLowerCase().replace(/ /g, '-')}`} className="text-slate-500 hover:text-blue-600 transition font-medium">
+                    {item}
+                  </Link>
+                ))}
+              </div>
+              <div className="flex justify-center gap-6">
+                <Link href="https://twitter.com/trainermatch" className="text-slate-500 hover:text-blue-600 transition">
+                  <Globe className="w-6 h-6" />
                 </Link>
-              ))}
-            </div>
+                {/* Add more social icons as needed */}
+              </div>
+            </motion.div>
           </div>
         </footer>
       </div>

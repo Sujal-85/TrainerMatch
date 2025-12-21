@@ -16,7 +16,7 @@ export class AiService {
         }
         this.genAI = new GoogleGenerativeAI(apiKey || '');
         // Using stable model gemini-1.5-flash
-        this.model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+        this.model = this.genAI.getGenerativeModel({ model: 'gemini-3-pro-preview' });
     }
 
     async generateProposal(requirementContext: string, trainerProfile: string): Promise<string> {

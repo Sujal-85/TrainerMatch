@@ -18,6 +18,7 @@ import { PrismaModule } from './prisma/prisma.module';
 
 import { CollegeProposalsModule } from './modules/college-proposals/college-proposals.module';
 import { UploadsModule } from './modules/uploads/uploads.module';
+import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { UploadsModule } from './modules/uploads/uploads.module';
     AiModule,
     GoogleModule,
     UploadsModule,
+    SubscriptionsModule,
   ],
   controllers: [],
   providers: [],

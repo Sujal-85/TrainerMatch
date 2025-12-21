@@ -179,7 +179,7 @@ Your Goal: Assist the user with questions related to this project. Be helpful, t
                                         <div
                                             className={`p-3 rounded-2xl text-sm shadow-sm ${msg.role === 'user'
                                                 ? 'bg-white dark:bg-zinc-800 text-gray-800 dark:text-gray-200 rounded-tr-none border border-gray-100 dark:border-zinc-700'
-                                                : 'bg-gradient-to-br from-violet-600 to-indigo-600 text-white rounded-tl-none shadow-md'
+                                                : 'bg-white text-white rounded-tl-none shadow-md'
                                                 }`}
                                         >
                                             <div className="prose prose-sm dark:prose-invert max-w-none break-words">

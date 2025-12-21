@@ -46,6 +46,28 @@ export class NotificationsService {
         return this.triggerN8n('SMS', to, { message });
     }
 
+    async create(data: {
+        recipientId: string;
+        recipientType: string;
+        title: string;
+        message: string;
+        type: any;
+        entityId?: string;
+        entityType?: string;
+    }) {
+        return this.prisma.notification.create({
+            data: {
+                recipientId: data.recipientId,
+                recipientType: data.recipientType,
+                title: data.title,
+                message: data.message,
+                type: data.type,
+                entityId: data.entityId,
+                entityType: data.entityType,
+            }
+        });
+    }
+
     async sendInAppNotification(userId: string, title: string, message: string, type: 'INFO' | 'ALERT' | 'SUCCESS' = 'INFO') {
         // DB Notification (Mock Logic maintained or real DB insert)
         return this.prisma.notification.create({

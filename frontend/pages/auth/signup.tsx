@@ -82,7 +82,11 @@ export default function Signup() {
             await api.post('/auth/sync-profile', payload);
 
             toast.success('Account created successfully!', { id: toastId });
-            router.push('/dashboard'); // Or specific dashboard based on role logic if we want to add that here too
+            if (role === 'vendor') {
+                router.push('/pricing');
+            } else {
+                router.push('/trainer/dashboard');
+            }
         } catch (err: any) {
             console.error("Signup Error:", err);
             let msg = 'Failed to sign up.';
@@ -118,8 +122,23 @@ export default function Signup() {
             }
 
             if (provider) {
-                await signInWithPopup(auth, provider);
-                router.push('/dashboard');
+                const userCredential = await signInWithPopup(auth, provider);
+                const user = userCredential.user;
+                const token = await user.getIdToken();
+
+                // Sync profile with role
+                const res = await api.post('/auth/sync-profile', {
+                    role,
+                    displayName: user.displayName,
+                    email: user.email,
+                    uid: user.uid
+                });
+
+                if (role === 'vendor') {
+                    router.push('/pricing');
+                } else {
+                    router.push('/trainer/dashboard');
+                }
             }
         } catch (err: any) {
             console.error(err);

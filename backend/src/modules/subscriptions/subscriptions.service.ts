@@ -12,10 +12,17 @@ export class SubscriptionsService {
         private prisma: PrismaService,
         private configService: ConfigService,
     ) {
-        this.razorpay = new Razorpay({
-            key_id: this.configService.get<string>('RAZORPAY_KEY_ID'),
-            key_secret: this.configService.get<string>('RAZORPAY_KEY_SECRET'),
-        });
+        const keyId = this.configService.get<string>('RAZORPAY_KEY_ID');
+        const keySecret = this.configService.get<string>('RAZORPAY_KEY_SECRET');
+
+        if (keyId && keySecret) {
+            this.razorpay = new Razorpay({
+                key_id: keyId,
+                key_secret: keySecret,
+            });
+        } else {
+            this.logger.warn('Razorpay credentials missing. Subscriptions related features will not work.');
+        }
     }
 
     async createSubscription(vendorId: string, planType: 'STARTER' | 'MASTER' | 'CUSTOM', billingCycle: 'MONTHLY' | 'YEARLY') {
@@ -31,6 +38,10 @@ export class SubscriptionsService {
         };
 
         const razorpayPlanId = planIdMap[planType][billingCycle];
+
+        if (!this.razorpay) {
+            throw new Error('Razorpay is not configured. Please set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET environment variables.');
+        }
 
         const subscription = await this.razorpay.subscriptions.create({
             plan_id: razorpayPlanId,
@@ -63,6 +74,10 @@ export class SubscriptionsService {
     async cancelSubscription(subscriptionId: string) {
         const sub = await this.prisma.subscription.findUnique({ where: { id: subscriptionId } });
         if (!sub) throw new Error('Subscription not found');
+
+        if (!this.razorpay) {
+            throw new Error('Razorpay is not configured. Please set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET environment variables.');
+        }
 
         await this.razorpay.subscriptions.cancel(sub.razorpaySubId, false); // Cancel at end of cycle
 

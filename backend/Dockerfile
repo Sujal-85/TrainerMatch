@@ -1,9 +1,9 @@
-# Use Node.js 20 slim as base image
-FROM node:20-slim
+# Use Node.js 20 full as base image
+FROM node:20
 
-# Install OpenSSL and other dependencies
+# Install OpenSSL
 RUN apt-get update -y && \
-    apt-get install -y openssl ca-certificates && \
+    apt-get install -y openssl && \
     rm -rf /var/lib/apt/lists/*
 
 # Set working directory

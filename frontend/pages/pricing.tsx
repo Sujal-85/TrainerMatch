@@ -172,7 +172,7 @@ export default function Pricing() {
                                             <span className="text-4xl font-extrabold text-slate-900">{plan.price}</span>
                                         ) : (
                                             <div className="flex items-baseline gap-1">
-                                                <span className="text-4xl font-extrabold text-slate-900">₹{price.toLocaleString()}</span>
+                                                <span className="text-4xl font-extrabold text-slate-900">₹{(price as number || 0).toLocaleString()}</span>
                                                 <span className="text-slate-400 font-medium">/mo</span>
                                             </div>
                                         )}

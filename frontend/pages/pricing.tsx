@@ -142,7 +142,11 @@ export default function Pricing() {
                         {PLANS.map((plan) => {
                             const Icon = plan.icon;
                             const isCustom = plan.id === 'CUSTOM';
-                            const price = isCustom ? plan.price : (billingCycle === 'MONTHLY' ? plan.monthlyPrice : Math.floor(plan.yearlyPrice / 12));
+                            const price = isCustom
+                                ? plan.price
+                                : (billingCycle === 'MONTHLY'
+                                    ? (plan.monthlyPrice ?? 0)
+                                    : Math.floor((plan.yearlyPrice ?? 0) / 12));
 
                             return (
                                 <motion.div
@@ -174,7 +178,7 @@ export default function Pricing() {
                                         )}
                                         {!isCustom && (
                                             <p className="text-xs text-slate-400 mt-2">
-                                                {billingCycle === 'YEARLY' ? `Billed ₹${plan.yearlyPrice.toLocaleString()} annually` : 'Billed monthly'}
+                                                {billingCycle === 'YEARLY' ? `Billed ₹${(plan.yearlyPrice ?? 0).toLocaleString()} annually` : 'Billed monthly'}
                                             </p>
                                         )}
                                     </div>

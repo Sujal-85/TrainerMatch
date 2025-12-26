@@ -160,7 +160,7 @@ export default function TrainerProfile() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 flex">
+        <div className="min-h-screen bg-background text-foreground flex">
             <Sidebar />
             <div className="flex-1 flex flex-col ml-0 md:ml-64 transition-all duration-300">
                 {/* Header Section */}
@@ -180,13 +180,13 @@ export default function TrainerProfile() {
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             {/* Left Column: Avatar & Stats */}
-                            <Card className="md:col-span-1 border-none shadow-lg bg-white">
+                            <Card className="md:col-span-1 border border-border shadow-lg bg-white">
                                 <CardContent className="p-6 flex flex-col items-center text-center">
                                     <div
                                         className="relative mb-4 group cursor-pointer"
                                         onClick={() => fileInputRef.current?.click()}
                                     >
-                                        <Avatar className="w-32 h-32 border-4 border-white shadow-xl">
+                                        <Avatar className="w-32 h-32 border-4 border-card shadow-xl">
                                             <AvatarImage
                                                 src={
                                                     profile?.profilePicture ||
@@ -207,29 +207,29 @@ export default function TrainerProfile() {
                                         />
                                     </div>
 
-                                    <h2 className="text-xl font-bold text-slate-900">{profile?.name || 'Trainer'}</h2>
-                                    <p className="text-slate-500 mb-4">{profile?.email}</p>
+                                    <h2 className="text-xl font-bold text-foreground">{profile?.name || 'Trainer'}</h2>
+                                    <p className="text-muted-foreground mb-4">{profile?.email}</p>
 
-                                    <div className="flex items-center gap-1 mb-6 bg-yellow-50 px-3 py-1 rounded-full border border-yellow-100">
-                                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                                        <span className="font-bold text-yellow-700">4.9/5.0</span>
+                                    <div className="flex items-center gap-1 mb-6 bg-yellow-500/10 px-3 py-1 rounded-full border border-yellow-500/20">
+                                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-600" />
+                                        <span className="font-bold text-yellow-600">4.9/5.0</span>
                                     </div>
 
-                                    <div className="w-full grid grid-cols-2 gap-4 text-left p-4 bg-slate-50 rounded-xl">
+                                    <div className="w-full grid grid-cols-2 gap-4 text-left p-4 bg-muted/50 rounded-xl">
                                         <div>
-                                            <p className="text-xs text-slate-500 uppercase">Hourly Rate</p>
-                                            <p className="font-semibold text-slate-900">${profile?.hourlyRate || 0}/hr</p>
+                                            <p className="text-xs text-muted-foreground uppercase">Hourly Rate</p>
+                                            <p className="font-semibold text-foreground">${profile?.hourlyRate || 0}/hr</p>
                                         </div>
                                         <div>
-                                            <p className="text-xs text-slate-500 uppercase">Experience</p>
-                                            <p className="font-semibold text-slate-900">N/A</p>
+                                            <p className="text-xs text-muted-foreground uppercase">Experience</p>
+                                            <p className="font-semibold text-foreground">N/A</p>
                                         </div>
                                     </div>
                                 </CardContent>
                             </Card>
 
                             {/* Right Column: Edit Form */}
-                            <Card className="md:col-span-2 border-none shadow-lg bg-white">
+                            <Card className="md:col-span-2 border border-border shadow-lg bg-white text-foreground">
                                 <CardHeader>
                                     <CardTitle>Profile Details</CardTitle>
                                     <CardDescription>Update your personal information and skills</CardDescription>

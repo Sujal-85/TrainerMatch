@@ -8,6 +8,7 @@
   html {
     font-family: 'Outfit', sans-serif;
   }
+
   body {
     font-family: 'Outfit', sans-serif;
   }
@@ -15,6 +16,7 @@
 
 @layer base {
   :root {
+    color-scheme: light;
     --background: 0 0% 100%;
     --foreground: 222.2 47.4% 11.2%;
 
@@ -48,13 +50,14 @@
   }
 
   .dark {
+    color-scheme: dark;
     --background: 224 71% 4%;
     --foreground: 213 31% 91%;
 
-    --muted: 223 47% 11%;
-    --muted-foreground: 215.4 16.3% 56.9%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
 
-    --accent: 216 34% 17%;
+    --accent: 217.2 32.6% 17.5%;
     --accent-foreground: 210 40% 98%;
 
     --popover: 224 71% 4%;
@@ -63,11 +66,11 @@
     --border: 216 34% 17%;
     --input: 216 34% 17%;
 
-    --card: 224 71% 4%;
-    --card-foreground: 213 31% 91%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 47.4% 11.2%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 1.2%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
 
     --secondary: 222.2 47.4% 11.2%;
     --secondary-foreground: 210 40% 98%;
@@ -85,6 +88,7 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
@@ -95,59 +99,59 @@
   .bg-background {
     background-color: hsl(var(--background));
   }
-  
+
   .text-foreground {
     color: hsl(var(--foreground));
   }
-  
+
   .border-border {
     border-color: hsl(var(--border));
   }
-  
+
   .text-muted-foreground {
     color: hsl(var(--muted-foreground));
   }
-  
+
   .bg-muted {
     background-color: hsl(var(--muted));
   }
-  
+
   .bg-primary {
     background-color: hsl(var(--primary));
   }
-  
+
   .text-primary {
     color: hsl(var(--primary));
   }
-  
+
   .text-primary-foreground {
     color: hsl(var(--primary-foreground));
   }
-  
+
   .bg-secondary {
     background-color: hsl(var(--secondary));
   }
-  
+
   .text-secondary {
     color: hsl(var(--secondary));
   }
-  
+
   .text-secondary-foreground {
     color: hsl(var(--secondary-foreground));
   }
-  
+
   .bg-destructive {
     background-color: hsl(var(--destructive));
   }
-  
+
   .text-destructive {
     color: hsl(var(--destructive));
   }
-  
+
   .text-destructive-foreground {
     color: hsl(var(--destructive-foreground));
   }
-  
+
   .ring-ring {
     --tw-ring-color: hsl(var(--ring));
   }

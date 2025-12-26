@@ -80,7 +80,7 @@ export default function TrainerDashboard() {
 
                 <Sidebar />
 
-                <main className="md:pl-64 pt-0 transition-all duration-300 min-h-screen bg-slate-50/50">
+                <main className="md:pl-64 pt-0 transition-all duration-300 min-h-screen bg-transparent">
                     {/* Header Section */}
                     <div className="relative bg-gradient-to-r from-violet-600 to-indigo-600 text-white pb-24 pt-10 px-6 shadow-xl">
                         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-soft-light"></div>
@@ -120,7 +120,7 @@ export default function TrainerDashboard() {
                                     {stats.map((stat) => {
                                         const Icon = stat.icon;
                                         return (
-                                            <Card key={stat.name} className="overflow-hidden border-none shadow-lg hover:shadow-xl transition-all duration-300 group">
+                                            <Card key={stat.name} className="overflow-hidden border border-border shadow-lg hover:shadow-xl transition-all duration-300 group bg-white">
                                                 <CardContent className="p-0">
                                                     <div className="p-6 bg-white">
                                                         <div className="flex justify-between items-start mb-4">
@@ -135,8 +135,8 @@ export default function TrainerDashboard() {
                                                             )}
                                                         </div>
                                                         <div>
-                                                            <h3 className="text-3xl font-bold text-slate-800 mb-1">{stat.value}</h3>
-                                                            <p className="text-slate-500 text-sm font-medium">{stat.name}</p>
+                                                            <h3 className="text-3xl font-bold text-foreground mb-1">{stat.value}</h3>
+                                                            <p className="text-muted-foreground text-sm font-medium">{stat.name}</p>
                                                         </div>
                                                     </div>
                                                 </CardContent>
@@ -147,8 +147,8 @@ export default function TrainerDashboard() {
 
                                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                                     {/* Recommended Jobs */}
-                                    <Card className="lg:col-span-2 border-none shadow-lg shadow-slate-200/50">
-                                        <CardHeader className="bg-white border-b border-slate-50 flex flex-row items-center justify-between">
+                                    <Card className="lg:col-span-2 border border-border shadow-lg bg-white">
+                                        <CardHeader className="bg-white border-b border-border flex flex-row items-center justify-between">
                                             <div>
                                                 <CardTitle className="text-lg font-bold text-slate-800">Recommended Jobs</CardTitle>
                                                 <CardDescription>Based on your skills and experience</CardDescription>
@@ -157,16 +157,16 @@ export default function TrainerDashboard() {
                                         </CardHeader>
                                         <CardContent className="p-0 bg-white">
                                             {recommendedJobs.length === 0 ? (
-                                                <div className="p-8 text-center text-slate-500">No recommended jobs found.</div>
+                                                <div className="p-8 text-center text-muted-foreground">No recommended jobs found.</div>
                                             ) : recommendedJobs.map((job: any) => (
-                                                <div key={job.id} className="p-4 border-b border-slate-50 hover:bg-slate-50 transition-colors flex items-center justify-between group">
+                                                <div key={job.id} className="p-4 border-b border-border hover:bg-muted/50 transition-colors flex items-center justify-between group">
                                                     <div className="flex items-center gap-4">
-                                                        <div className="h-10 w-10 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500">
+                                                        <div className="h-10 w-10 rounded-lg bg-muted flex items-center justify-center text-muted-foreground">
                                                             <Briefcase className="w-5 h-5" />
                                                         </div>
                                                         <div>
-                                                            <h4 className="font-semibold text-slate-800">{job.title}</h4>
-                                                            <p className="text-sm text-slate-500">{job.location || 'Remote'} • ${job.budgetMin || 50}-{job.budgetMax || 80}/hr</p>
+                                                            <h4 className="font-semibold text-foreground">{job.title}</h4>
+                                                            <p className="text-sm text-muted-foreground">{job.location || 'Remote'} • ${job.budgetMin || 50}-{job.budgetMax || 80}/hr</p>
                                                         </div>
                                                     </div>
                                                     <Button size="sm" variant="outline" className="opacity-0 group-hover:opacity-100 transition-opacity text-indigo-600 border-indigo-200 hover:bg-indigo-50">
@@ -178,9 +178,9 @@ export default function TrainerDashboard() {
                                     </Card>
 
                                     {/* Upcoming Schedule */}
-                                    <Card className="border-none shadow-lg shadow-slate-200/50">
-                                        <CardHeader className="bg-white border-b border-slate-50">
-                                            <CardTitle className="text-lg font-bold text-slate-800">Upcoming Schedule</CardTitle>
+                                    <Card className="border border-border shadow-lg bg-white">
+                                        <CardHeader className="bg-white border-b border-border">
+                                            <CardTitle className="text-lg font-bold text-foreground">Upcoming Schedule</CardTitle>
                                         </CardHeader>
                                         <CardContent className="p-6 bg-white space-y-6">
                                             {upcomingSessions.length === 0 ? (
@@ -191,9 +191,9 @@ export default function TrainerDashboard() {
                                                     <p className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-1">
                                                         {new Date(session.startTime).toLocaleDateString()} {new Date(session.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                                     </p>
-                                                    <h4 className="font-semibold text-slate-800">{session.title}</h4>
-                                                    <p className="text-sm text-slate-500">{session.college?.name || 'Unknown Client'}</p>
-                                                    <span className="inline-block mt-2 px-2 py-1 bg-slate-100 text-slate-600 text-xs rounded-md">
+                                                    <h4 className="font-semibold text-foreground">{session.title}</h4>
+                                                    <p className="text-sm text-muted-foreground">{session.college?.name || 'Unknown Client'}</p>
+                                                    <span className="inline-block mt-2 px-2 py-1 bg-muted text-muted-foreground text-xs rounded-md">
                                                         {session.status}
                                                     </span>
                                                 </div>

@@ -28,6 +28,7 @@ export default function Settings() {
     name: 'Alex Johnson',
     email: 'alex.johnson@company.com',
     role: 'VENDOR_USER',
+    profilePicture: '',
     bio: 'Training coordinator with 8 years of experience in educational program management.',
     organization: 'TechCorp University',
     notificationEmails: true,
@@ -45,6 +46,7 @@ export default function Settings() {
           name: user.name || user.email?.split('@')[0] || '',
           email: user.email || '',
           role: user.role || 'VENDOR_USER',
+          profilePicture: user.profilePicture || '',
           bio: user.bio || prev.bio,
           organization: user.vendor?.name || prev.organization,
         }));
@@ -98,7 +100,7 @@ export default function Settings() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-background text-foreground">
       <Head>
         <title>TrainerMatch - Settings</title>
         <meta name="description" content="Manage your account settings" />
@@ -120,9 +122,9 @@ export default function Settings() {
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             {/* Navigation */}
             <div className="lg:col-span-1 space-y-4">
-              <Card className="bg-white border-none shadow-lg shadow-blue-900/5">
+              <Card className="bg-white border-border shadow-lg">
                 <CardHeader>
-                  <CardTitle className="text-lg font-bold text-slate-800">Menu</CardTitle>
+                  <CardTitle className="text-lg font-bold text-foreground">Menu</CardTitle>
                 </CardHeader>
                 <CardContent className="p-2">
                   <nav className="space-y-1">
@@ -133,9 +135,9 @@ export default function Settings() {
                         <Button
                           key={tab.id}
                           variant={isActive ? 'default' : 'ghost'}
-                          className={`w-full justify-start text-sm font-medium transition-all duration-200 ${isActive
+                          className={`w-full justify-start text-sm font-bold transition-all duration-200 ${isActive
                             ? 'bg-blue-600 text-white shadow-md shadow-blue-500/30'
-                            : 'text-slate-600 hover:bg-blue-50 hover:text-blue-600'
+                            : 'text-slate-500 hover:bg-blue-50 hover:text-blue-600 dark:text-slate-500 dark:hover:bg-blue-900/20'
                             }`}
                           onClick={() => setActiveTab(tab.id)}
                         >
@@ -154,7 +156,9 @@ export default function Settings() {
                 <CardContent className="p-6 relative z-10 flex flex-col items-center text-center">
                   <div className="h-20 w-20 rounded-full bg-white/20 p-1 mb-3 backdrop-blur-sm">
                     <div className="h-full w-full rounded-full bg-slate-100 flex items-center justify-center overflow-hidden">
-                      {formData.name ? (
+                      {formData.profilePicture ? (
+                        <img src={formData.profilePicture} alt={formData.name} className="h-full w-full object-cover" />
+                      ) : formData.name ? (
                         <span className="text-2xl font-bold text-slate-700">{formData.name.charAt(0)}</span>
                       ) : (
                         <User className="h-10 w-10 text-slate-400" />
@@ -170,17 +174,17 @@ export default function Settings() {
 
             {/* Content */}
             <div className="lg:col-span-3">
-              <Card className="border-none shadow-lg shadow-blue-900/5 rounded-lg">
-                <CardHeader className="bg-white border-b border-slate-50 pb-4">
+              <Card className="border-border shadow-lg bg-white rounded-lg">
+                <CardHeader className="bg-white border-b border-border pb-4">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-blue-50 rounded-lg">
-                      {tabs.find(t => t.id === activeTab)?.icon && React.createElement(tabs.find(t => t.id === activeTab)!.icon, { className: "h-6 w-6 text-blue-600" })}
+                    <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                      {tabs.find(t => t.id === activeTab)?.icon && React.createElement(tabs.find(t => t.id === activeTab)!.icon, { className: "h-6 w-6 text-blue-600 dark:text-blue-400" })}
                     </div>
                     <div>
-                      <CardTitle className="text-xl font-bold text-slate-800">
+                      <CardTitle className="text-xl font-bold text-foreground">
                         {tabs.find(tab => tab.id === activeTab)?.name}
                       </CardTitle>
-                      <CardDescription className="text-sm text-slate-500">
+                      <CardDescription className="text-sm text-muted-foreground">
                         {activeTab === 'profile' && 'Update your personal information and public profile.'}
                         {activeTab === 'organization' && 'Manage your organization details and settings.'}
                         {activeTab === 'notifications' && 'Choose how you want to be notified.'}
@@ -196,8 +200,10 @@ export default function Settings() {
                       <div className="space-y-6 animate-in fade-in duration-500">
                         <div className="flex items-center gap-6">
                           <div className="relative group">
-                            <div className="h-24 w-24 rounded-full bg-slate-100 flex items-center justify-center overflow-hidden border-4 border-white shadow-md">
-                              {formData.name ? (
+                            <div className="h-24 w-24 rounded-full bg-slate-100 dark:bg-slate-100 flex items-center justify-center overflow-hidden border-4 border-white shadow-md">
+                              {formData.profilePicture ? (
+                                <img src={formData.profilePicture} alt={formData.name} className="h-full w-full object-cover" />
+                              ) : formData.name ? (
                                 <span className="text-3xl font-bold text-slate-400">{formData.name.charAt(0)}</span>
                               ) : (
                                 <User className="h-12 w-12 text-slate-300" />
@@ -212,10 +218,10 @@ export default function Settings() {
                             </Button>
                           </div>
                           <div>
-                            <h3 className="font-medium text-slate-800">Profile Photo</h3>
-                            <p className="text-sm text-slate-500 mb-2">Detailed photos help you build trust.</p>
+                            <h3 className="font-bold text-slate-800 dark:text-slate-800">Profile Photo</h3>
+                            <p className="text-sm text-slate-500 dark:text-slate-500 mb-2">Detailed photos help you build trust.</p>
                             <div className="flex gap-2">
-                              <Button variant="outline" size="sm" className="text-xs">Upload New</Button>
+                              <Button variant="outline" size="sm" className="text-xs bg-white dark:bg-white text-slate-600 dark:text-slate-600 border-slate-200">Upload New</Button>
                               <Button variant="ghost" size="sm" className="text-xs text-red-500 hover:text-red-600 hover:bg-red-50">Remove</Button>
                             </div>
                           </div>
@@ -248,14 +254,14 @@ export default function Settings() {
                         </div>
 
                         <div className="space-y-2">
-                          <Label htmlFor="bio">Bio</Label>
+                          <Label htmlFor="bio" className="text-slate-700 dark:text-slate-700 font-bold">Bio</Label>
                           <Textarea
                             name="bio"
                             id="bio"
                             rows={4}
                             value={formData.bio}
                             onChange={handleChange}
-                            className="bg-slate-50 border-slate-200 focus:ring-blue-500 resize-none"
+                            className="bg-slate-50 dark:bg-white border-slate-200 text-slate-800 dark:text-slate-800 focus:ring-blue-500 resize-none"
                             placeholder="Tell us a little about yourself"
                           />
                           <p className="text-xs text-slate-400 text-right">0/300 characters</p>
@@ -292,11 +298,11 @@ export default function Settings() {
                         </div>
 
                         <div className="space-y-2">
-                          <Label>Description</Label>
+                          <Label className="text-slate-700 dark:text-slate-700 font-bold">Description</Label>
                           <Textarea
                             rows={4}
                             placeholder="Describe your organization's mission and goals..."
-                            className="bg-slate-50 border-slate-200 focus:ring-blue-500"
+                            className="bg-slate-50 dark:bg-white border-slate-200 text-slate-800 dark:text-slate-800 focus:ring-blue-500"
                           />
                         </div>
                       </div>
@@ -400,12 +406,7 @@ export default function Settings() {
                     )}
                   </form>
                 </CardContent>
-                <CardFooter className="bg-slate-50 border-t border-slate-100 p-4 flex justify-end rounded-b-xl">
-                  <Button type="submit" onClick={handleSubmit} className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/20">
-                    <Save className="h-4 w-4 mr-2" />
-                    Save Changes
-                  </Button>
-                </CardFooter>
+
               </Card>
             </div>
           </div>

@@ -100,21 +100,22 @@ export default function Sidebar() {
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed top-4 left-0 z-40 h-screen w-64 border-r border-blue-100/50 bg-white/80 backdrop-blur-xl transition-transform duration-300 ease-out shadow-2xl shadow-blue-900/5",
+          "fixed top-4 left-0 z-40 h-screen w-64 border-r border-border bg-background/80 backdrop-blur-xl transition-transform duration-300 ease-out shadow-2xl shadow-blue-900/5",
+          "dark:shadow-none",
           "md:translate-x-0",
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
-        <div className="flex h-full flex-col bg-gradient-to-b from-blue-50/50 via-white to-white">
+        <div className="flex h-full flex-col bg-background">
           {/* Logo & Header */}
-          <div className="flex h-20 items-center px-6 border-b border-blue-100/50">
+          <div className="flex h-20 items-center px-6 border-b border-border">
             <Link href="/" className="flex items-center gap-3 group" onClick={() => setIsOpen(false)}>
               <div className="relative transform group-hover:scale-105 transition-transform duration-500">
                 <div className="flex items-center gap-2">
                   <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
                     <Sparkles className="h-6 w-6 text-white" />
                   </div>
-                  <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-700">
+                  <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-zinc-400">
                     Avalytics
                   </span>
                 </div>
@@ -137,13 +138,13 @@ export default function Sidebar() {
                     "group relative flex items-center gap-3 rounded-xl px-4 py-3.5 text-sm font-medium transition-all duration-300",
                     active
                       ? "bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-lg shadow-blue-500/30 translate-x-1"
-                      : "text-slate-500 hover:text-blue-600 hover:bg-blue-50"
+                      : "text-slate-500 hover:text-blue-600 hover:bg-blue-50 dark:text-zinc-400 dark:hover:text-white dark:hover:bg-white/5"
                   )}
                 >
                   <Icon
                     className={cn(
                       "h-5 w-5 transition-all duration-300",
-                      active ? "text-white" : "text-slate-400 group-hover:text-blue-500 group-hover:scale-110"
+                      active ? "text-white" : "text-slate-400 group-hover:text-blue-500 group-hover:scale-110 dark:text-zinc-500 dark:group-hover:text-blue-400"
                     )}
                   />
 
@@ -159,29 +160,31 @@ export default function Sidebar() {
           </nav>
 
           {/* Upgrade / Premium Badge */}
-          <div className="p-4 mx-4 mb-2">
-            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-600 p-5 text-center shadow-xl shadow-blue-500/20 group cursor-pointer hover:shadow-blue-500/30 transition-shadow">
+          <div className="p-4 mx-4 -my-1 ">
+            <div className="relative overflow-hidden h-44 m rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-600 p-5 text-center shadow-xl shadow-blue-500/20 group cursor-pointer hover:shadow-blue-500/30 transition-shadow">
               {/* Background Shapes */}
-              <div className="absolute top-0 right-0 -mt-2 -mr-2 w-16 h-16 bg-white/10 rounded-full blur-xl transform group-hover:scale-150 transition-transform duration-500" />
-              <div className="absolute bottom-0 left-0 -mb-2 -ml-2 w-16 h-16 bg-blue-400/20 rounded-full blur-xl" />
+              <div className="absolute top-0 right-0 -mt-2 -mr-2 w-12 h-8 bg-white/10 rounded-full blur-xl transform group-hover:scale-150 transition-transform duration-500" />
+              <div className="absolute bottom-0 left-0 -mb-2 -ml-2 w-12 h-8 bg-blue-400/20 rounded-full blur-xl" />
 
               <div className="relative bg-white/10 w-12 h-12 mx-auto rounded-xl flex items-center justify-center mb-3 backdrop-blur-sm border border-white/10">
                 <Sparkles className="h-6 w-6 text-white" />
               </div>
               <p className="text-sm font-bold text-white mb-1">Pro Plan</p>
               <p className="text-xs text-blue-100/80 mb-3">Get unlimited access</p>
-              <Button size="sm" className="w-full bg-white text-blue-600 hover:bg-blue-50 border-none font-semibold shadow-sm">
-                Upgrade Now
-              </Button>
+              <Link href="/pricing" className="w-full">
+                <Button size="sm" className="w-full bg-white text-blue-600 hover:bg-blue-50 border-none font-semibold shadow-sm">
+                  Upgrade Now
+                </Button>
+              </Link>
             </div>
           </div>
 
           {/* Logout */}
-          <div className="border-t border-blue-100 p-4 bg-blue-50/30">
+          <div className="border-t border-blue-100 p-4 bg-blue-50/30 dark:border-white/10 dark:bg-black/20">
             <Button
               variant="ghost"
               onClick={logout}
-              className="w-full justify-start text-slate-500 hover:text-red-600 hover:bg-red-50 transition-colors group"
+              className="w-full justify-start text-slate-500 hover:text-red-600 hover:bg-red-50 dark:text-zinc-400 dark:hover:text-red-400 dark:hover:bg-red-950/30 transition-colors group"
             >
               <LogOut className="mr-3 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               Logout

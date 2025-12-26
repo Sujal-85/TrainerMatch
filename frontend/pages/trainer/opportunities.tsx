@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'sonner';
 import Sidebar from '@/components/sidebar';
 import Header from '@/components/header';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -27,6 +28,11 @@ export default function TrainerOpportunities() {
     const [trainerProfile, setTrainerProfile] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [opportunities, setOpportunities] = useState<any[]>([]);
+    const [cost, setCost] = useState('');
+    const [duration, setDuration] = useState('');
+    const [submitting, setSubmitting] = useState(false);
+    const [selectedOppDetails, setSelectedOppDetails] = useState<any>(null);
+    const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -46,6 +52,34 @@ export default function TrainerOpportunities() {
 
         fetchData();
     }, []);
+
+    const handleSubmitProposal = async () => {
+        if (!selectedOpp || !trainerProfile) return;
+        if (!cost || !duration) {
+            toast.error("Please provide cost and duration.");
+            return;
+        }
+
+        setSubmitting(true);
+        try {
+            await api.post('/proposals', {
+                requirementId: selectedOpp.id,
+                trainerId: trainerProfile.id,
+                content: proposalText,
+                cost: parseFloat(cost),
+                duration: parseInt(duration),
+                status: 'SUBMITTED'
+            });
+            toast.success("Proposal submitted successfully!");
+            setCost('');
+            setDuration('');
+        } catch (error) {
+            console.error("Submission failed", error);
+            toast.error("Failed to submit proposal.");
+        } finally {
+            setSubmitting(false);
+        }
+    };
 
     const handleGenerateProposal = async (opp: any) => {
         if (!trainerProfile) {
@@ -77,7 +111,7 @@ export default function TrainerOpportunities() {
 
 
     return (
-        <div className="min-h-screen bg-slate-50 flex">
+        <div className="min-h-screen bg-background text-foreground flex">
             <Sidebar />
             <div className="flex-1 flex flex-col ml-0 md:ml-64 transition-all duration-300">
                 {/* Header Section */}
@@ -107,10 +141,10 @@ export default function TrainerOpportunities() {
                     ) : (
                         <>
                             <div className="relative mb-8">
-                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5" />
                                 <Input
                                     placeholder="Search by skill, company, or location..."
-                                    className="pl-10 h-12 bg-white shadow-lg border-none ring-1 ring-slate-100"
+                                    className="pl-10 h-12 bg-white shadow-lg border border-border"
                                 />
                             </div>
 
@@ -122,8 +156,8 @@ export default function TrainerOpportunities() {
                                                 <Search className="w-8 h-8 text-violet-600" />
                                             </div>
                                         </div>
-                                        <h3 className="text-2xl font-bold text-slate-900 mb-2">No Opportunities Found</h3>
-                                        <p className="text-slate-500 max-w-md mx-auto mb-8 leading-relaxed">
+                                        <h3 className="text-2xl font-bold text-foreground mb-2">No Opportunities Found</h3>
+                                        <p className="text-muted-foreground max-w-md mx-auto mb-8 leading-relaxed">
                                             We couldn't find any open opportunities matching your criteria right now. Try adjusting your filters or check back later!
                                         </p>
                                         <Button
@@ -136,7 +170,7 @@ export default function TrainerOpportunities() {
                                     </div>
                                 ) : (
                                     opportunities.map((opp) => (
-                                        <Card key={opp.id} className="hover:shadow-lg transition-all duration-300 border-slate-200 group cursor-pointer overflow-hidden">
+                                        <Card key={opp.id} className="hover:shadow-lg transition-all duration-300 bg-white border border-border group cursor-pointer overflow-hidden">
                                             <CardContent className="p-6 relative z-10">
                                                 <div className="flex flex-col md:flex-row gap-6">
                                                     <div className="flex-1">
@@ -145,22 +179,22 @@ export default function TrainerOpportunities() {
                                                                 <Badge variant="secondary" className="mb-2 bg-blue-100 text-blue-700 hover:bg-blue-200">
                                                                     New
                                                                 </Badge>
-                                                                <h3 className="text-xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+                                                                <h3 className="text-xl font-bold text-foreground group-hover:text-blue-600 transition-colors">
                                                                     {opp.title}
                                                                 </h3>
-                                                                <p className="text-slate-500 font-medium">{opp.vendor?.name || opp.college?.name || 'Unknown Organization'}</p>
+                                                                <p className="text-muted-foreground font-medium truncate">{opp.vendor?.name || opp.college?.name || 'Unknown Organization'}</p>
                                                             </div>
                                                             <div className="text-right hidden md:block">
-                                                                <div className="text-lg font-bold text-slate-900">
+                                                                <div className="text-lg font-bold text-foreground">
                                                                     {opp.budgetMin && opp.budgetMax ? `$${opp.budgetMin} - $${opp.budgetMax}` : 'Budget Negotiable'}
                                                                 </div>
-                                                                <div className="text-sm text-slate-500">Estimated value</div>
+                                                                <div className="text-sm text-muted-foreground">Estimated value</div>
                                                             </div>
                                                         </div>
 
-                                                        <div className="flex flex-wrap gap-4 my-4 text-sm text-slate-600">
+                                                        <div className="flex flex-wrap gap-4 my-4 text-sm text-muted-foreground">
                                                             <div className="flex items-center gap-1.5">
-                                                                <MapPin className="w-4 h-4 text-slate-400" />
+                                                                <MapPin className="w-4 h-4 text-muted-foreground/60" />
                                                                 {opp.location || 'Remote'}
                                                             </div>
                                                             <div className="flex items-center gap-1.5 md:hidden">
@@ -171,7 +205,7 @@ export default function TrainerOpportunities() {
 
                                                         <div className="flex flex-wrap gap-2 mt-4">
                                                             {opp.tags && opp.tags.map((tag: string) => (
-                                                                <Badge key={tag} variant="outline" className="border-slate-200 text-slate-600">
+                                                                <Badge key={tag} variant="outline" className="border-border text-muted-foreground">
                                                                     {tag}
                                                                 </Badge>
                                                             ))}
@@ -204,19 +238,50 @@ export default function TrainerOpportunities() {
                                                                         </div>
                                                                     ) : (
                                                                         <textarea
-                                                                            className="flex-1 w-full p-4 rounded-lg border border-slate-200 focus:ring-2 focus:ring-violet-500 focus:border-transparent resize-none text-slate-700 leading-relaxed"
+                                                                            className="flex-1 w-full p-4 rounded-lg bg-background border border-border focus:ring-2 focus:ring-violet-500 focus:border-transparent resize-none text-foreground leading-relaxed"
                                                                             value={proposalText}
                                                                             onChange={(e) => setProposalText(e.target.value)}
                                                                         />
                                                                     )}
-                                                                    <Button className="mt-4 w-full bg-violet-600 hover:bg-violet-700">
-                                                                        Submit Proposal
+                                                                    <div className="grid grid-cols-2 gap-4 my-4">
+                                                                        <div>
+                                                                            <label className="text-xs font-bold text-muted-foreground uppercase">Cost ($)</label>
+                                                                            <Input
+                                                                                type="number"
+                                                                                placeholder="e.g. 500"
+                                                                                value={cost}
+                                                                                onChange={(e) => setCost(e.target.value)}
+                                                                            />
+                                                                        </div>
+                                                                        <div>
+                                                                            <label className="text-xs font-bold text-muted-foreground uppercase">Duration (days)</label>
+                                                                            <Input
+                                                                                type="number"
+                                                                                placeholder="e.g. 5"
+                                                                                value={duration}
+                                                                                onChange={(e) => setDuration(e.target.value)}
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                    <Button
+                                                                        className="mt-4 w-full bg-violet-600 hover:bg-violet-700"
+                                                                        onClick={handleSubmitProposal}
+                                                                        disabled={submitting || generating}
+                                                                    >
+                                                                        {submitting ? "Submitting..." : "Submit Proposal"}
                                                                     </Button>
                                                                 </div>
                                                             </SheetContent>
                                                         </Sheet>
 
-                                                        <Button variant="outline" className="w-full md:w-auto gap-2">
+                                                        <Button
+                                                            variant="outline"
+                                                            className="w-full md:w-auto gap-2"
+                                                            onClick={() => {
+                                                                setSelectedOppDetails(opp);
+                                                                setIsDetailsOpen(true);
+                                                            }}
+                                                        >
                                                             View Details
                                                             <ArrowRight className="w-4 h-4" />
                                                         </Button>
@@ -230,6 +295,86 @@ export default function TrainerOpportunities() {
                         </>
                     )}
                 </main>
+
+                <Sheet open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
+                    <SheetContent className="sm:max-w-xl overflow-y-auto">
+                        <SheetHeader className="border-b pb-4 mb-6">
+                            <SheetTitle className="text-2xl font-bold flex items-center gap-2">
+                                <Search className="text-violet-600" />
+                                Opportunity Details
+                            </SheetTitle>
+                            <SheetDescription>
+                                Full description and requirements for this training session.
+                            </SheetDescription>
+                        </SheetHeader>
+
+                        {selectedOppDetails && (
+                            <div className="space-y-8">
+                                <div>
+                                    <Badge className="mb-2 bg-violet-100 text-violet-700 hover:bg-violet-200 border-none px-3 py-1">
+                                        Open Opportunity
+                                    </Badge>
+                                    <h3 className="text-2xl font-bold text-foreground">{selectedOppDetails.title}</h3>
+                                    <p className="text-muted-foreground font-medium mt-1">
+                                        {selectedOppDetails.vendor?.name || selectedOppDetails.college?.name || 'Organization'}
+                                    </p>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="bg-muted/50 p-4 rounded-xl border border-border">
+                                        <div className="flex items-center gap-2 text-muted-foreground mb-1">
+                                            <DollarSign size={14} />
+                                            <span className="text-xs font-bold uppercase tracking-wider">Budget</span>
+                                        </div>
+                                        <p className="text-lg font-bold text-foreground">
+                                            {selectedOppDetails.budgetMin && selectedOppDetails.budgetMax
+                                                ? `$${selectedOppDetails.budgetMin} - $${selectedOppDetails.budgetMax}`
+                                                : 'Negotiable'}
+                                        </p>
+                                    </div>
+                                    <div className="bg-muted/50 p-4 rounded-xl border border-border">
+                                        <div className="flex items-center gap-2 text-muted-foreground mb-1">
+                                            <MapPin size={14} />
+                                            <span className="text-xs font-bold uppercase tracking-wider">Location</span>
+                                        </div>
+                                        <p className="text-lg font-bold text-foreground">{selectedOppDetails.location || 'Remote'}</p>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-4">
+                                    <h4 className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Description</h4>
+                                    <p className="text-foreground leading-relaxed whitespace-pre-wrap">
+                                        {selectedOppDetails.description || 'No detailed description provided.'}
+                                    </p>
+                                </div>
+
+                                <div className="space-y-4">
+                                    <h4 className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Required Skills</h4>
+                                    <div className="flex flex-wrap gap-2">
+                                        {selectedOppDetails.tags?.map((tag: string) => (
+                                            <Badge key={tag} variant="secondary" className="bg-violet-50 text-violet-700 border-violet-100">
+                                                {tag}
+                                            </Badge>
+                                        )) || <span className="text-slate-400 italic">No specific skills listed</span>}
+                                    </div>
+                                </div>
+
+                                <div className="pt-6 border-t">
+                                    <Button
+                                        className="w-full bg-violet-600 hover:bg-violet-700 h-12 text-lg font-bold shadow-lg shadow-violet-500/20"
+                                        onClick={() => {
+                                            setIsDetailsOpen(false);
+                                            handleGenerateProposal(selectedOppDetails);
+                                        }}
+                                    >
+                                        <Zap className="w-5 h-5 mr-2" />
+                                        Generate AI Proposal
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
+                    </SheetContent>
+                </Sheet>
             </div>
         </div>
     );

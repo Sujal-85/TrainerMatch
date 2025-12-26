@@ -39,7 +39,7 @@ export default function TrainerSessions() {
 
 
     return (
-        <div className="min-h-screen bg-slate-50 flex">
+        <div className="min-h-screen bg-background text-foreground flex">
             <Sidebar />
             <div className="flex-1 flex flex-col ml-0 md:ml-64 transition-all duration-300">
                 {/* Header Section */}
@@ -59,27 +59,27 @@ export default function TrainerSessions() {
                         </div>
                     ) : (
                         <Tabs defaultValue="upcoming" className="space-y-6">
-                            <TabsList className="bg-white p-1 border border-slate-200 rounded-xl">
-                                <TabsTrigger value="upcoming" className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700">Upcoming</TabsTrigger>
-                                <TabsTrigger value="past" className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700">Past & Completed</TabsTrigger>
-                                <TabsTrigger value="requests" className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700">Pending Requests</TabsTrigger>
+                            <TabsList className="bg-white p-1 border border-border rounded-xl">
+                                <TabsTrigger value="upcoming" className="data-[state=active]:bg-muted data-[state=active]:text-foreground">Upcoming</TabsTrigger>
+                                <TabsTrigger value="past" className="data-[state=active]:bg-muted data-[state=active]:text-foreground">Past & Completed</TabsTrigger>
+                                <TabsTrigger value="requests" className="data-[state=active]:bg-muted data-[state=active]:text-foreground">Pending Requests</TabsTrigger>
                             </TabsList>
 
                             <TabsContent value="upcoming" className="space-y-8 min-h-[400px]">
                                 {upcomingSessions.length > 0 ? (
                                     upcomingSessions.map(session => (
-                                        <Card key={session.id} className="overflow-hidden border-l-4 mt-20 border-l-blue-500 hover:shadow-md transition-all">
+                                        <Card key={session.id} className="overflow-hidden bg-white border border-border border-l-4 border-l-primary hover:shadow-md transition-all">
                                             <CardContent className="p-6">
                                                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                                                     <div className="space-y-1">
                                                         <div className="flex items-center gap-2">
-                                                            <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                                                            <Badge variant="outline" className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20">
                                                                 {session.status}
                                                             </Badge>
-                                                            <span className="text-sm text-slate-500">Online</span>
+                                                            <span className="text-sm text-muted-foreground">Online</span>
                                                         </div>
-                                                        <h3 className="text-xl font-bold text-slate-900">{session.title}</h3>
-                                                        <p className="text-slate-600 font-medium">{session.college?.name || 'Unknown Client'}</p>
+                                                        <h3 className="text-xl font-bold text-foreground">{session.title}</h3>
+                                                        <p className="text-muted-foreground font-medium truncate">{session.college?.name || 'Unknown Client'}</p>
                                                     </div>
 
                                                     <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 text-sm text-slate-600">
@@ -88,8 +88,8 @@ export default function TrainerSessions() {
                                                                 <CalendarIcon className="w-5 h-5" />
                                                             </div>
                                                             <div>
-                                                                <p className="text-xs text-slate-400">Date & Time</p>
-                                                                <p className="font-semibold text-slate-900">
+                                                                <p className="text-xs text-muted-foreground">Date & Time</p>
+                                                                <p className="font-semibold text-foreground">
                                                                     {new Date(session.startTime).toLocaleDateString()} {new Date(session.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                                                 </p>
                                                             </div>
@@ -99,8 +99,8 @@ export default function TrainerSessions() {
                                                                 <Clock className="w-5 h-5" />
                                                             </div>
                                                             <div>
-                                                                <p className="text-xs text-slate-400">End Time</p>
-                                                                <p className="font-semibold text-slate-900">
+                                                                <p className="text-xs text-muted-foreground font-medium">End Time</p>
+                                                                <p className="font-semibold text-foreground">
                                                                     {new Date(session.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                                                 </p>
                                                             </div>
@@ -138,14 +138,14 @@ export default function TrainerSessions() {
                             <TabsContent value="past" className="space-y-4 min-h-[400px]">
                                 {pastSessions.length > 0 ? (
                                     pastSessions.map(session => (
-                                        <Card key={session.id} className="opacity-75 hover:opacity-100 transition-opacity">
+                                        <Card key={session.id} className="opacity-75 hover:opacity-100 transition-opacity bg-white border border-border">
                                             <CardContent className="p-6">
                                                 <div className="flex items-center justify-between">
                                                     <div>
-                                                        <h3 className="text-lg font-bold text-slate-900">{session.title}</h3>
-                                                        <p className="text-slate-500">{session.college?.name} • {new Date(session.startTime).toLocaleDateString()}</p>
+                                                        <h3 className="text-lg font-bold text-foreground">{session.title}</h3>
+                                                        <p className="text-muted-foreground truncate">{session.college?.name} • {new Date(session.startTime).toLocaleDateString()}</p>
                                                     </div>
-                                                    <Badge variant="secondary" className="bg-slate-100 text-slate-600">
+                                                    <Badge variant="secondary" className="bg-muted text-muted-foreground">
                                                         <CheckCircle2 className="w-3 h-3 mr-1" />
                                                         Completed
                                                     </Badge>
@@ -170,8 +170,8 @@ export default function TrainerSessions() {
                                             <CheckCircle2 className="w-8 h-8 text-purple-600" />
                                         </div>
                                     </div>
-                                    <h3 className="text-xl font-bold text-slate-900 mb-2">No Pending Requests</h3>
-                                    <p className="text-slate-500 max-w-sm mx-auto">
+                                    <h3 className="text-xl font-bold text-foreground mb-2">No Pending Requests</h3>
+                                    <p className="text-muted-foreground max-w-sm mx-auto">
                                         You're all caught up! New training requests will show up here for your approval.
                                     </p>
                                 </div>

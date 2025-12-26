@@ -1,16 +1,21 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import { AuthProvider } from '@/context/AuthContext';
-import ChatAssistant from '@/components/ChatAssistant';
+import dynamic from 'next/dynamic';
+const ChatAssistant = dynamic(() => import('@/components/ChatAssistant'), { ssr: false });
 
 import { Toaster } from 'sonner';
 
+import { ThemeProvider } from '@/components/theme-provider';
+
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <AuthProvider>
-      <Component {...pageProps} />
-      <ChatAssistant />
-      <Toaster position="top-right" richColors closeButton />
-    </AuthProvider>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <AuthProvider>
+        <Component {...pageProps} />
+        <ChatAssistant />
+        <Toaster position="top-right" richColors closeButton />
+      </AuthProvider>
+    </ThemeProvider>
   );
 }

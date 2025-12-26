@@ -72,7 +72,7 @@ export default function Sessions() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-slate-50">
+      <div className="min-h-screen bg-background text-foreground">
         <Head>
           <title>TrainerMatch - Sessions</title>
           <meta name="description" content="Manage and track training sessions" />
@@ -100,32 +100,32 @@ export default function Sessions() {
 
           <div className="container mx-auto px-6 -mt-16 relative z-20 pb-10">
             {/* Filters */}
-            <div className="flex flex-wrap gap-2 mb-8 bg-white p-2 rounded-xl shadow-lg shadow-blue-900/5 border border-blue-50 w-full sm:w-fit">
+            <div className="flex flex-wrap gap-2 mb-8 bg-white p-2 rounded-xl shadow-lg border border-border w-full sm:w-fit">
               <Button
                 variant="ghost"
                 onClick={() => setFilter('all')}
-                className={`rounded-lg ${filter === 'all' ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-slate-500 hover:text-slate-700'}`}
+                className={`rounded-lg ${filter === 'all' ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-semibold' : 'text-muted-foreground hover:text-foreground'}`}
               >
                 All Sessions
               </Button>
               <Button
                 variant="ghost"
                 onClick={() => setFilter('upcoming')}
-                className={`rounded-lg ${filter === 'upcoming' ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-slate-500 hover:text-slate-700'}`}
+                className={`rounded-lg ${filter === 'upcoming' ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-semibold' : 'text-muted-foreground hover:text-foreground'}`}
               >
                 Upcoming
               </Button>
               <Button
                 variant="ghost"
                 onClick={() => setFilter('completed')}
-                className={`rounded-lg ${filter === 'completed' ? 'bg-emerald-50 text-emerald-600 font-semibold' : 'text-slate-500 hover:text-slate-700'}`}
+                className={`rounded-lg ${filter === 'completed' ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 font-semibold' : 'text-muted-foreground hover:text-foreground'}`}
               >
                 Completed
               </Button>
               <Button
                 variant="ghost"
                 onClick={() => setFilter('cancelled')}
-                className={`rounded-lg ${filter === 'cancelled' ? 'bg-red-50 text-red-600 font-semibold' : 'text-slate-500 hover:text-slate-700'}`}
+                className={`rounded-lg ${filter === 'cancelled' ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 font-semibold' : 'text-muted-foreground hover:text-foreground'}`}
               >
                 Cancelled
               </Button>
@@ -145,19 +145,19 @@ export default function Sessions() {
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                           <div>
                             <div className="flex flex-wrap items-center gap-3 mb-2">
-                              <CardTitle className="text-lg font-bold text-slate-800">{session.title}</CardTitle>
+                              <CardTitle className="text-lg font-bold text-slate-900 dark:text-slate-900">{session.title}</CardTitle>
                               {getStatusBadge(session.status)}
                             </div>
                             <CardDescription className="flex flex-wrap items-center gap-4 text-sm mt-1">
-                              <span className="flex items-center gap-1.5 text-slate-600 bg-slate-50 px-2 py-1 rounded-md">
+                              <span className="flex items-center gap-1.5 text-slate-500 dark:text-slate-500 bg-slate-100 dark:bg-slate-100 px-2 py-1 rounded-md">
                                 <Calendar className="h-3.5 w-3.5 text-blue-500" />
                                 {session.date}
                               </span>
-                              <span className="flex items-center gap-1.5 text-slate-500">
+                              <span className="flex items-center gap-1.5 text-slate-500 dark:text-slate-500">
                                 <Clock className="h-3.5 w-3.5" />
                                 {session.time}
                               </span>
-                              <span className="flex items-center gap-1.5 text-slate-500">
+                              <span className="flex items-center gap-1.5 text-slate-500 dark:text-slate-500">
                                 {session.location.includes('Virtual') ? (
                                   <Video className="h-3.5 w-3.5" />
                                 ) : (
@@ -182,10 +182,10 @@ export default function Sessions() {
                           </div>
                         </div>
                       </CardHeader>
-                      <CardContent className="bg-slate-50/50 pt-4">
+                      <CardContent className="bg-muted/30 pt-4">
                         <div className="flex flex-col sm:flex-row gap-4 justify-between items-center">
-                          <div className="text-sm text-slate-400">
-                            Session ID: <span className="font-mono text-slate-600">#{session.id.substring(0, 8)}</span>
+                          <div className="text-sm text-slate-500 dark:text-slate-500">
+                            Session ID: <span className="font-mono text-slate-900 dark:text-slate-900">#{session.id.substring(0, 8)}</span>
                           </div>
                           <div className="flex flex-wrap gap-3 w-full sm:w-auto justify-end">
                             {session.status === 'upcoming' && (
@@ -195,7 +195,9 @@ export default function Sessions() {
                               </>
                             )}
                             {session.status === 'completed' && (
-                              <Button variant="outline" className="h-9 border-blue-200 text-blue-600 hover:bg-blue-50">View Feedback</Button>
+                              <Link href={`/vendor/sessions/${session.id}`}>
+                                <Button variant="outline" className="h-9 border-blue-200 text-blue-600 hover:bg-blue-50">View Feedback</Button>
+                              </Link>
                             )}
                             <Link href={`/vendor/sessions/${session.id}`}>
                               <Button className="h-9 bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-blue-600 shadow-sm">View Details</Button>
@@ -208,12 +210,12 @@ export default function Sessions() {
                 </div>
 
                 {filteredSessions(filter).length === 0 && (
-                  <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-slate-200">
-                    <div className="bg-blue-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
-                      <CalendarCheck className="h-10 w-10 text-blue-500" />
+                  <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-border">
+                    <div className="bg-muted w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                      <CalendarCheck className="h-10 w-10 text-muted-foreground" />
                     </div>
-                    <h3 className="text-xl font-bold text-slate-800 mb-2">No sessions found</h3>
-                    <p className="text-slate-500 max-w-md mx-auto mb-8">
+                    <h3 className="text-xl font-bold text-foreground mb-2">No sessions found</h3>
+                    <p className="text-muted-foreground max-w-md mx-auto mb-8">
                       {filter === 'all'
                         ? "You don't have any scheduled sessions yet."
                         : `You don't have any ${filter} sessions.`}
@@ -226,7 +228,7 @@ export default function Sessions() {
                     </Link>
                   </div>
                 )}
-                    </>
+              </>
             )}
           </div>
         </main>

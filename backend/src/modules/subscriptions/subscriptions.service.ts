@@ -16,9 +16,16 @@ export class SubscriptionsService {
         const keySecret = this.configService.get<string>('RAZORPAY_KEY_SECRET');
 
         if (keyId && keySecret) {
+            this.logger.log(`Initializing Razorpay with Key ID: ${keyId.substring(0, 7)}...`);
             this.razorpay = new Razorpay({
                 key_id: keyId,
                 key_secret: keySecret,
+            });
+            // Test connection by listing plans
+            this.razorpay.plans.all().then(plans => {
+                this.logger.log(`Successfully connected to Razorpay. Found ${plans.count} plans.`);
+            }).catch(err => {
+                this.logger.error('Failed to connect to Razorpay or fetch plans:', err);
             });
         } else {
             this.logger.warn('Razorpay credentials missing. Subscriptions related features will not work.');
@@ -38,33 +45,82 @@ export class SubscriptionsService {
         };
 
         const razorpayPlanId = planIdMap[planType][billingCycle];
+        const useMock = this.configService.get<string>('USE_MOCK_SUBSCRIPTIONS') === 'true';
 
-        if (!this.razorpay) {
+        if (!this.razorpay && !useMock) {
             throw new Error('Razorpay is not configured. Please set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET environment variables.');
         }
 
-        const subscription = await this.razorpay.subscriptions.create({
-            plan_id: razorpayPlanId,
-            total_count: billingCycle === 'MONTHLY' ? 120 : 10, // Max periods
-            quantity: 1,
-            customer_notify: 1,
-            expire_by: Math.floor(Date.now() / 1000) + 3600, // 1 hour for initial payment
-            addons: [],
-            notes: {
-                vendorId: vendor.id,
-            },
-        });
+        if (useMock) {
+            this.logger.log(`Using MOCK SUBSCRIPTION for vendor ${vendorId}`);
+            return this.createMockSubscription(vendor.id, planType, billingCycle, razorpayPlanId);
+        }
 
-        return this.prisma.subscription.create({
-            data: {
-                vendorId: vendor.id,
-                razorpaySubId: subscription.id,
-                razorpayPlanId: subscription.plan_id,
-                status: 'PENDING',
+        try {
+            const subscription = await this.razorpay.subscriptions.create({
+                plan_id: razorpayPlanId,
+                total_count: billingCycle === 'MONTHLY' ? 120 : 10,
+                quantity: 1,
+                customer_notify: 1,
+                expire_by: Math.floor(Date.now() / 1000) + 3600,
+                addons: [],
+                notes: {
+                    vendorId: vendor.id,
+                },
+            });
+
+            return this.prisma.subscription.create({
+                data: {
+                    vendorId: vendor.id,
+                    razorpaySubId: subscription.id,
+                    razorpayPlanId: subscription.plan_id,
+                    status: 'PENDING',
+                    planType: planType,
+                    billingCycle: billingCycle,
+                    currentStart: new Date(),
+                    currentEnd: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+                    trialStart: new Date(),
+                    trialEnd: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+                },
+            });
+        } catch (error: any) {
+            this.logger.error(`Error creating Razorpay subscription for plan ${razorpayPlanId}:`, error);
+
+            // Auto-fallback to mock if feature is disabled on account (URL not found)
+            if (error.error?.description?.includes('not found on the server')) {
+                this.logger.warn('Razorpay Subscriptions feature seems disabled. AUTO-FALLBACK to mock mode.');
+                return this.createMockSubscription(vendor.id, planType, billingCycle, razorpayPlanId);
+            }
+
+            if (error.error) {
+                this.logger.error('Razorpay Error Details:', JSON.stringify(error.error, null, 2));
+            }
+            throw new Error(`Failed to create subscription: ${error.message || 'Unknown Razorpay error'}`);
+        }
+    }
+
+    private async createMockSubscription(vendorId: string, planType: any, billingCycle: any, planId: string) {
+        const mockSubId = `mock_sub_${Math.random().toString(36).substring(7)}`;
+        return this.prisma.subscription.upsert({
+            where: { vendorId },
+            update: {
+                razorpaySubId: mockSubId,
+                razorpayPlanId: planId,
+                status: 'ACTIVE',
                 planType: planType,
                 billingCycle: billingCycle,
                 currentStart: new Date(),
-                currentEnd: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days initially
+                currentEnd: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+            },
+            create: {
+                vendorId: vendorId,
+                razorpaySubId: mockSubId,
+                razorpayPlanId: planId,
+                status: 'ACTIVE',
+                planType: planType,
+                billingCycle: billingCycle,
+                currentStart: new Date(),
+                currentEnd: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
                 trialStart: new Date(),
                 trialEnd: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
             },

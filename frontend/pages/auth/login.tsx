@@ -173,8 +173,8 @@ export default function Login() {
             <div className="flex flex-col items-center justify-center p-6 lg:p-12 overflow-y-auto">
                 <div className="w-full max-w-md space-y-8">
                     <div className="text-center">
-                        <h2 className="text-3xl font-bold tracking-tight text-slate-900">Welcome back</h2>
-                        <p className="mt-2 text-slate-500">
+                        <h2 className="text-3xl font-bold tracking-tight text-foreground">Welcome back</h2>
+                        <p className="mt-2 text-muted-foreground">
                             Enter your credentials to access your dashboard
                         </p>
                     </div>
@@ -206,7 +206,7 @@ export default function Login() {
                             <span className="w-full border-t border-slate-200" />
                         </div>
                         <div className="relative flex justify-center text-xs uppercase">
-                            <span className="bg-background px-2 text-slate-500">
+                            <span className="bg-background px-2 text-muted-foreground">
                                 Or continue with email
                             </span>
                         </div>
@@ -214,7 +214,7 @@ export default function Login() {
 
                     <form onSubmit={handleLogin} className="space-y-4">
                         <div className="space-y-2">
-                            <Label htmlFor="email" className="text-slate-700">Email address</Label>
+                            <Label htmlFor="email" className="text-foreground/80">Email address</Label>
                             <Input
                                 id="email"
                                 type="email"
@@ -227,7 +227,7 @@ export default function Login() {
                         </div>
                         <div className="space-y-2">
                             <div className="flex items-center justify-between">
-                                <Label htmlFor="password" className="text-slate-700">Password</Label>
+                                <Label htmlFor="password" className="text-foreground/80">Password</Label>
                                 <Link href="/auth/forgot-password" className="text-sm font-medium text-blue-600 hover:text-blue-500">
                                     Forgot password?
                                 </Link>
@@ -280,7 +280,7 @@ export default function Login() {
                         </Button>
                     </form>
 
-                    <p className="px-8 text-center text-sm text-slate-500">
+                    <p className="px-8 text-center text-sm text-muted-foreground">
                         By clicking continue, you agree to our{" "}
                         <Link href="/terms" className="underline hover:text-blue-600">
                             Terms of Service
@@ -292,7 +292,7 @@ export default function Login() {
                         .
                     </p>
 
-                    <div className="text-center text-sm text-slate-600">
+                    <div className="text-center text-sm text-muted-foreground">
                         Don't have an account?{" "}
                         <Link href="/auth/signup" className="font-semibold text-blue-600 hover:text-blue-500 hover:underline">
                             Start your 14-day free trial

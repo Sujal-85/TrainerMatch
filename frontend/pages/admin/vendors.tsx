@@ -28,12 +28,12 @@ export default function AdminVendors() {
 
     return (
         <ProtectedRoute>
-            <div className="min-h-screen bg-slate-50 flex">
+            <div className="min-h-screen bg-background text-foreground flex">
                 <Sidebar />
                 <div className="flex-1 flex flex-col ml-0 md:ml-64 transition-all duration-300">
 
 
-                    <main className="md:pl-0 pt-0 min-h-screen bg-slate-50 w-full">
+                    <main className="md:pl-0 pt-0 min-h-screen bg-background w-full">
                         <div className="bg-gradient-to-r from-blue-800 to-indigo-900 text-white pb-24 pt-10 px-6 shadow-xl">
                             <div className="max-w-7xl mx-auto flex items-end justify-between">
                                 <div>
@@ -52,14 +52,14 @@ export default function AdminVendors() {
                                 <CardContent className="p-6 bg-white rounded-lg">
                                     <div className="flex items-center gap-4 mb-6">
                                         <div className="relative flex-1 max-w-md">
-                                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
+                                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
                                             <Input placeholder="Search vendors..." className="pl-9" />
                                         </div>
                                     </div>
 
                                     <div className="border rounded-lg overflow-hidden ">
                                         <Table className='bg-white'>
-                                            <TableHeader className="bg-slate-50">
+                                            <TableHeader className="bg-muted/50">
                                                 <TableRow>
                                                     <TableHead>Organization</TableHead>
                                                     <TableHead>Status</TableHead>
@@ -79,8 +79,8 @@ export default function AdminVendors() {
                                                                     </AvatarFallback>
                                                                 </Avatar>
                                                                 <div>
-                                                                    <div className="font-medium text-slate-900">{vendor.name}</div>
-                                                                    <div className="text-xs text-slate-500">{vendor.email}</div>
+                                                                    <div className="font-medium text-foreground">{vendor.name}</div>
+                                                                    <div className="text-xs text-muted-foreground">{vendor.email}</div>
                                                                 </div>
                                                             </div>
                                                         </TableCell>
@@ -97,14 +97,14 @@ export default function AdminVendors() {
                                                             <Badge variant="secondary">{vendor.plan}</Badge>
                                                         </TableCell>
                                                         <TableCell>
-                                                            <div className="flex items-center gap-1.5 text-slate-600">
+                                                            <div className="flex items-center gap-1.5 text-muted-foreground">
                                                                 <User className="w-3 h-3" />
                                                                 {vendor.users}
                                                             </div>
                                                         </TableCell>
                                                         <TableCell className="text-right">
                                                             <Button variant="ghost" size="icon">
-                                                                <MoreVertical className="w-4 h-4 text-slate-400" />
+                                                                <MoreVertical className="w-4 h-4 text-muted-foreground" />
                                                             </Button>
                                                         </TableCell>
                                                     </TableRow>

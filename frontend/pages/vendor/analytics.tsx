@@ -70,7 +70,7 @@ export default function Analytics() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-slate-50">
+      <div className="min-h-screen bg-background text-foreground">
         <Head>
           <title>TrainerMatch - Analytics</title>
           <meta name="description" content="Analytics dashboard for TrainerMatch" />
@@ -78,7 +78,7 @@ export default function Analytics() {
 
         <Sidebar />
 
-        <main className="md:pl-64 pt-0 transition-all duration-300 min-h-screen">
+        <main className="md:pl-64 pt-0 transition-all duration-300 min-h-screen bg-transparent">
           {/* Header Section */}
           <div className="relative bg-gradient-to-r from-blue-600 to-cyan-600 text-white pb-24 pt-10 px-6 shadow-xl">
             <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-soft-light"></div>
@@ -110,79 +110,79 @@ export default function Analytics() {
             ) : (
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                  <Card className="overflow-hidden border-none shadow-lg hover:shadow-xl transition-all duration-300 group">
+                  <Card className="overflow-hidden border-none shadow-lg hover:shadow-xl transition-all duration-300 group dark:bg-zinc-900/50">
                     <CardContent className="p-0">
-                      <div className="p-6 bg-white">
+                      <div className="p-6 bg-white dark:bg-zinc-900">
                         <div className="flex justify-between items-start mb-4">
                           <div className="p-3 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-400 text-white shadow-lg shadow-blue-500/20">
                             <Award className="h-6 w-6" />
                           </div>
-                          <span className="flex items-center text-sm font-semibold text-green-500 bg-green-50 px-2 py-1 rounded-full border border-green-100">
+                          <span className="flex items-center text-sm font-semibold text-green-500 bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded-full border border-green-100 dark:border-green-500/20">
                             <TrendingUp className="w-3 h-3 mr-1" />
                             +5%
                           </span>
                         </div>
                         <div>
-                          <h3 className="text-3xl font-bold text-slate-800 mb-1">{matchSuccess}%</h3>
-                          <p className="text-slate-500 text-sm font-medium">Match Success Rate</p>
+                          <h3 className="text-3xl font-bold text-slate-800 dark:text-white mb-1">{matchSuccess}%</h3>
+                          <p className="text-slate-500 dark:text-zinc-400 text-sm font-medium">Match Success Rate</p>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
 
-                  <Card className="overflow-hidden border-none shadow-lg hover:shadow-xl transition-all duration-300 group">
+                  <Card className="overflow-hidden border border-border shadow-lg hover:shadow-xl transition-all duration-300 group bg-white">
                     <CardContent className="p-0">
                       <div className="p-6 bg-white">
                         <div className="flex justify-between items-start mb-4">
                           <div className="p-3 rounded-2xl bg-gradient-to-br from-cyan-500 to-teal-400 text-white shadow-lg shadow-cyan-500/20">
                             <Activity className="h-6 w-6" />
                           </div>
-                          <span className="flex items-center text-sm font-semibold text-green-500 bg-green-50 px-2 py-1 rounded-full border border-green-100">
+                          <span className="flex items-center text-sm font-semibold text-green-500 bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded-full border border-green-100 dark:border-green-500/20">
                             <TrendingUp className="w-3 h-3 mr-1" />
                             +12%
                           </span>
                         </div>
                         <div>
-                          <h3 className="text-3xl font-bold text-slate-800 mb-1">{trainerPerformanceData?.length || 0}</h3>
-                          <p className="text-slate-500 text-sm font-medium">Active Trainers</p>
+                          <h3 className="text-3xl font-bold text-foreground mb-1">{trainerPerformanceData?.length || 0}</h3>
+                          <p className="text-muted-foreground text-sm font-medium">Active Trainers</p>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
 
-                  <Card className="overflow-hidden border-none shadow-lg hover:shadow-xl transition-all duration-300 group">
+                  <Card className="overflow-hidden border border-border shadow-lg hover:shadow-xl transition-all duration-300 group bg-white">
                     <CardContent className="p-0">
                       <div className="p-6 bg-white">
                         <div className="flex justify-between items-start mb-4">
                           <div className="p-3 rounded-2xl bg-gradient-to-br from-indigo-500 to-blue-500 text-white shadow-lg shadow-indigo-500/20">
                             <Target className="h-6 w-6" />
                           </div>
-                          <span className="flex items-center text-sm font-semibold text-slate-400 bg-slate-50 px-2 py-1 rounded-full border border-slate-100">
+                          <span className="flex items-center text-sm font-semibold text-muted-foreground bg-muted px-2 py-1 rounded-full border border-border">
                             Top
                           </span>
                         </div>
                         <div>
-                          <h3 className="text-2xl font-bold text-slate-800 mb-1 truncate">{categoryDistribution?.[0]?.name || 'N/A'}</h3>
-                          <p className="text-slate-500 text-sm font-medium">Top Category</p>
+                          <h3 className="text-2xl font-bold text-foreground mb-1 truncate">{categoryDistribution?.[0]?.name || 'N/A'}</h3>
+                          <p className="text-muted-foreground text-sm font-medium">Top Category</p>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
 
-                  <Card className="overflow-hidden border-none shadow-lg hover:shadow-xl transition-all duration-300 group">
+                  <Card className="overflow-hidden border border-border shadow-lg hover:shadow-xl transition-all duration-300 group bg-white">
                     <CardContent className="p-0">
                       <div className="p-6 bg-white">
                         <div className="flex justify-between items-start mb-4">
                           <div className="p-3 rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-500 text-white shadow-lg shadow-purple-500/20">
                             <FileIcon className="h-6 w-6" />
                           </div>
-                          <span className="flex items-center text-sm font-semibold text-slate-400 bg-slate-50 px-2 py-1 rounded-full border border-slate-100">
+                          <span className="flex items-center text-sm font-semibold text-muted-foreground bg-muted px-2 py-1 rounded-full border border-border">
                             This Month
                           </span>
                         </div>
                         <div>
-                          <h3 className="text-3xl font-bold text-slate-800 mb-1">12</h3>
-                          <p className="text-slate-500 text-sm font-medium">Reports Generated</p>
+                          <h3 className="text-3xl font-bold text-foreground mb-1">12</h3>
+                          <p className="text-muted-foreground text-sm font-medium">Reports Generated</p>
                         </div>
                       </div>
                     </CardContent>
@@ -191,19 +191,20 @@ export default function Analytics() {
 
                 {/* Charts Area */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-                  <Card className="border-none shadow-lg shadow-blue-900/5">
+                  <Card className="border border-border shadow-lg shadow-blue-900/5 bg-white">
                     <CardHeader>
-                      <CardTitle className="text-lg font-bold text-slate-800">Trainer Performance</CardTitle>
-                      <CardDescription>Average rating scores by top trainers</CardDescription>
+                      <CardTitle className="text-lg font-bold text-foreground">Trainer Performance</CardTitle>
+                      <CardDescription className="dark:text-zinc-400">Average rating scores by top trainers</CardDescription>
                     </CardHeader>
                     <CardContent className="h-[300px]">
                       <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={trainerPerformanceData}>
-                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                          <XAxis dataKey="trainer" fontSize={12} tickLine={false} axisLine={false} />
-                          <YAxis domain={[0, 5]} fontSize={12} tickLine={false} axisLine={false} />
+                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" className="dark:stroke-white/10" />
+                          <XAxis dataKey="trainer" fontSize={12} tickLine={false} axisLine={false} tick={{ fill: '#64748B' }} />
+                          <YAxis domain={[0, 5]} fontSize={12} tickLine={false} axisLine={false} tick={{ fill: '#64748B' }} />
                           <Tooltip
-                            contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                            contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', background: '#18181b', color: '#fff' }}
+                            itemStyle={{ color: '#fff' }}
                             cursor={{ fill: 'transparent' }}
                           />
                           <Bar dataKey="rating" fill="#3b82f6" radius={[4, 4, 0, 0]} barSize={40} />
@@ -212,10 +213,10 @@ export default function Analytics() {
                     </CardContent>
                   </Card>
 
-                  <Card className="border-none shadow-lg shadow-blue-900/5">
+                  <Card className="border border-border shadow-lg shadow-blue-900/5 bg-white">
                     <CardHeader>
-                      <CardTitle className="text-lg font-bold text-slate-800">Category Distribution</CardTitle>
-                      <CardDescription>Training sessions by category</CardDescription>
+                      <CardTitle className="text-lg font-bold text-foreground">Category Distribution</CardTitle>
+                      <CardDescription className="dark:text-zinc-400">Training sessions by category</CardDescription>
                     </CardHeader>
                     <CardContent className="h-[300px]">
                       <ResponsiveContainer width="100%" height="100%">
@@ -227,13 +228,19 @@ export default function Analytics() {
                             innerRadius={60}
                             outerRadius={80}
                             paddingAngle={5}
-                            dataKey="value"
+                            dataKey="percentage"
+                            nameKey="category"
+                            stroke="rgba(255,255,255,0.1)"
                           >
                             {categoryDistribution?.map((entry: any, index: number) => (
                               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} strokeWidth={0} />
                             ))}
                           </Pie>
-                          <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
+                          <Tooltip
+                            formatter={(value: number) => `${value}%`}
+                            contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', background: '#18181b', color: '#fff' }}
+                            itemStyle={{ color: '#fff' }}
+                          />
                         </PieChart>
                       </ResponsiveContainer>
                       <div className="flex flex-wrap justify-center gap-4 mt-2">
@@ -243,7 +250,7 @@ export default function Analytics() {
                               className="w-3 h-3 rounded-full"
                               style={{ backgroundColor: COLORS[index % COLORS.length] }}
                             />
-                            <span className="text-sm text-slate-600 font-medium">{entry.name}</span>
+                            <span className="text-sm text-slate-600 dark:text-zinc-400 font-medium">{entry.category} ({entry.percentage}%)</span>
                           </div>
                         ))}
                       </div>

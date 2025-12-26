@@ -5,7 +5,7 @@ import { FirebaseAuthGuard } from '../auth/firebase-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
 import * as PDFDocument from 'pdfkit';
-import { createWriteStream } from 'fs';
+import * as fs from 'fs';
 
 @Controller('requirements')
 @UseGuards(FirebaseAuthGuard, RolesGuard)
@@ -15,7 +15,6 @@ export class RequirementsController {
   @Post()
   @Roles('VENDOR_ADMIN', 'VENDOR_USER')
   async create(@Body() createRequirementDto: any, @Request() req) {
-    const fs = require('fs');
     const logData = `[${new Date().toISOString()}] Create Requirement Request:\nUser: ${JSON.stringify(req.user)}\nBody: ${JSON.stringify(createRequirementDto)}\n\n`;
     fs.appendFileSync('debug_logs.txt', logData);
 
@@ -42,6 +41,13 @@ export class RequirementsController {
   @Roles('VENDOR_ADMIN', 'VENDOR_USER', 'SUPER_ADMIN', 'TRAINER')
   async getRequirements() {
     return this.requirementsService.findAll();
+  }
+
+  @Get(':id')
+  @Roles('VENDOR_ADMIN', 'VENDOR_USER', 'SUPER_ADMIN', 'TRAINER')
+  async getRequirement(@Param('id') id: string) {
+    console.log('Fetching requirement details for ID:', id);
+    return this.requirementsService.findOne(id);
   }
 
   @Post(':id/generate-proposal')
@@ -84,7 +90,7 @@ export class RequirementsController {
     const filePath = `/tmp/${filename}`;
 
     const doc = new PDFDocument();
-    const stream = doc.pipe(createWriteStream(filePath));
+    const stream = doc.pipe(fs.createWriteStream(filePath));
 
     doc.fontSize(20).text('Training Proposal', { align: 'center' });
     doc.moveDown();

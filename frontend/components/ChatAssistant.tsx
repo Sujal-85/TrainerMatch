@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, X, Send, Sparkles, Bot, User } from 'lucide-react';
-import ReactMarkdown from 'react-markdown';
+// import ReactMarkdown from 'react-markdown';
 
 const GEMINI_API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY || '';
 
@@ -178,14 +178,12 @@ Your Goal: Assist the user with questions related to this project. Be helpful, t
                                         </div>
                                         <div
                                             className={`p-3 rounded-2xl text-sm shadow-sm ${msg.role === 'user'
-                                                ? 'bg-white dark:bg-zinc-800 text-gray-800 dark:text-gray-200 rounded-tr-none border border-gray-100 dark:border-zinc-700'
-                                                : 'bg-white text-white rounded-tl-none shadow-md'
+                                                ? 'bg-muted dark:bg-zinc-200 text-card-foreground rounded-tr-none border border-border'
+                                                : 'bg-primary text-primary-foreground rounded-tl-none shadow-md'
                                                 }`}
                                         >
-                                            <div className="prose prose-sm dark:prose-invert max-w-none break-words">
-                                                <ReactMarkdown>
-                                                    {msg.text}
-                                                </ReactMarkdown>
+                                            <div className="prose prose-sm max-w-none break-words whitespace-pre-wrap">
+                                                {msg.text}
                                             </div>
                                         </div>
                                     </div>

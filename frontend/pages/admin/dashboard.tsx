@@ -50,7 +50,7 @@ export default function AdminDashboard() {
 
                 <Sidebar />
 
-                <main className="md:pl-64 pt-0 min-h-screen bg-slate-50">
+                <main className="md:pl-64 pt-0 min-h-screen bg-transparent">
                     <div className="bg-gradient-to-r from-blue-800 to-indigo-900 text-white pb-24 pt-10 px-6 shadow-xl">
                         <div className="container mx-auto">
                             <h1 className="text-3xl font-bold mb-2">Admin Dashboard</h1>
@@ -69,7 +69,7 @@ export default function AdminDashboard() {
                                     {stats.map((stat) => {
                                         const Icon = iconMap[stat.icon] || Activity;
                                         return (
-                                            <Card key={stat.name} className="border-none shadow-xl bg-white hover:shadow-2xl transition-all duration-300">
+                                            <Card key={stat.name} className="border border-border shadow-xl bg-white hover:shadow-2xl transition-all duration-300">
                                                 <CardContent className="p-6">
                                                     <div className="flex justify-between items-start mb-4">
                                                         <div className={`p-3 rounded-xl ${stat.color} text-white shadow-lg ring-4 ring-blue-50`}>
@@ -79,8 +79,8 @@ export default function AdminDashboard() {
                                                             {stat.change}
                                                         </span>
                                                     </div>
-                                                    <h3 className="text-3xl font-bold text-slate-800 tracking-tight">{stat.value}</h3>
-                                                    <p className="text-sm font-medium text-slate-500 mt-1">{stat.name}</p>
+                                                    <h3 className="text-3xl font-bold text-foreground tracking-tight">{stat.value}</h3>
+                                                    <p className="text-sm font-medium text-muted-foreground mt-1">{stat.name}</p>
                                                 </CardContent>
                                             </Card>
                                         );
@@ -88,7 +88,7 @@ export default function AdminDashboard() {
                                 </div>
 
                                 {/* Admin Content Area - Recent Registrations */}
-                                <Card className="border-none shadow-lg">
+                                <Card className="border border-border shadow-lg bg-white">
                                     <CardHeader>
                                         <CardTitle>Recent Registrations</CardTitle>
                                         <CardDescription>Latest users joined the platform</CardDescription>
@@ -96,7 +96,7 @@ export default function AdminDashboard() {
                                     <CardContent>
                                         <div className="overflow-x-auto">
                                             <table className="w-full text-sm text-left">
-                                                <thead className="text-xs text-slate-500 uppercase bg-slate-50">
+                                                <thead className="text-xs text-muted-foreground uppercase bg-muted">
                                                     <tr>
                                                         <th className="px-6 py-3">User</th>
                                                         <th className="px-6 py-3">Role</th>
@@ -106,19 +106,19 @@ export default function AdminDashboard() {
                                                 </thead>
                                                 <tbody>
                                                     {recentUsers.map((user) => (
-                                                        <tr key={user.id} className="bg-white border-b hover:bg-slate-50">
-                                                            <td className="px-6 py-4 font-medium text-slate-900">
+                                                        <tr key={user.id} className="bg-white border-b border-border hover:bg-muted/50">
+                                                            <td className="px-6 py-4 font-medium text-foreground">
                                                                 {user.email}
                                                             </td>
                                                             <td className="px-6 py-4">
-                                                                <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
+                                                                <span className="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs font-medium px-2.5 py-0.5 rounded">
                                                                     {user.role}
                                                                 </span>
                                                             </td>
-                                                            <td className="px-6 py-4 text-slate-500">
+                                                            <td className="px-6 py-4 text-muted-foreground">
                                                                 {user.vendor?.name || user.trainer?.bio?.substring(0, 30) || 'N/A'}
                                                             </td>
-                                                            <td className="px-6 py-4 text-slate-500">
+                                                            <td className="px-6 py-4 text-muted-foreground">
                                                                 {new Date(user.createdAt).toLocaleDateString()}
                                                             </td>
                                                         </tr>

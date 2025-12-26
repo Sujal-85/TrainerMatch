@@ -13,7 +13,7 @@ import api from '@/lib/api';
 import { Spinner } from '@/components/ui/spinner';
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-    PieChart as RePieChart, Pie, Cell, Legend
+    PieChart as RePieChart, Pie, Cell, Legend, LineChart, Line, AreaChart, Area
 } from 'recharts';
 
 export default function VendorDashboard() {
@@ -93,12 +93,12 @@ export default function VendorDashboard() {
 
     return (
         <ProtectedRoute>
-            <div className="min-h-screen bg-slate-50">
+            <div className="min-h-screen bg-background text-foreground">
                 <Head>
                     <title>Vendor Dashboard | Avalytics</title>
                 </Head>
                 <Sidebar />
-                <main className="md:ml-64 pt-0 transition-all duration-300 min-h-screen bg-slate-50/50">
+                <main className="md:ml-64 pt-0 transition-all duration-300 min-h-screen bg-transparent">
                     {/* Premium Header - Reverted to Blue Theme */}
                     <div className="relative bg-gradient-to-br from-blue-700 via-blue-800 to-indigo-900 text-white pb-32 pt-12 px-6 overflow-hidden">
                         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-soft-light"></div>
@@ -144,13 +144,13 @@ export default function VendorDashboard() {
                                 {/* Stats Grid */}
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 ">
                                     {statCards.map((stat, i) => (
-                                        <Card key={i} className=" shadow-lg hover:shadow-md transition-shadow bg-white border-none h-[150px]">
+                                        <Card key={i} className="shadow-lg hover:shadow-md transition-shadow bg-white border-border h-[150px]">
                                             <CardContent className="p-6 flex items-center justify-between">
                                                 <div>
-                                                    <p className="text-sm font-medium text-slate-500 mb-1">{stat.label}</p>
-                                                    <h3 className="text-2xl font-bold text-slate-900">{stat.value}</h3>
+                                                    <p className="text-sm font-medium text-slate-500 dark:text-slate-500 mb-1">{stat.label}</p>
+                                                    <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-900">{stat.value}</h3>
                                                 </div>
-                                                <div className={`p-3 rounded-xl ${stat.bg}`}>
+                                                <div className="p-3 rounded-xl bg-muted group-hover:bg-muted/80 transition-colors">
                                                     <stat.icon className={`w-6 h-6 ${stat.color}`} />
                                                 </div>
                                             </CardContent>
@@ -161,37 +161,77 @@ export default function VendorDashboard() {
                                 {/* Charts Section */}
                                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
                                     {/* Main Bar Chart */}
-                                    <Card className="lg:col-span-2 border-none shadow-sm h-[400px]">
+                                    <Card className="lg:col-span-2 border border-border shadow-sm h-[400px] bg-white">
                                         <CardContent className="p-6 h-full flex flex-col">
                                             <div className="flex justify-between items-center mb-6">
-                                                <h3 className="font-bold text-lg text-slate-800 flex items-center gap-2">
+                                                <h3 className="font-bold text-lg text-slate-800 dark:text-slate-800 flex items-center gap-2">
                                                     <BarChart3 className="w-5 h-5 text-blue-500" />
                                                     Match Success Rate (Last 6 Months)
                                                 </h3>
                                             </div>
                                             <div className="flex-1 w-full min-h-0">
                                                 <ResponsiveContainer width="100%" height="100%">
-                                                    <BarChart data={chartData}>
-                                                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                                                        <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fill: '#64748B' }} />
-                                                        <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748B' }} />
-                                                        <Tooltip
-                                                            contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                                                            cursor={{ fill: '#F1F5F9' }}
+                                                    <LineChart data={chartData}>
+                                                        <defs>
+                                                            <linearGradient id="colorSuccess" x1="0" y1="0" x2="0" y2="1">
+                                                                <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.1} />
+                                                                <stop offset="95%" stopColor="#3B82F6" stopOpacity={0} />
+                                                            </linearGradient>
+                                                        </defs>
+                                                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" className="opacity-10" />
+                                                        <XAxis
+                                                            dataKey="month"
+                                                            axisLine={false}
+                                                            tickLine={false}
+                                                            tick={{ fill: '#64748b', fontSize: 12 }}
+                                                            dy={10}
                                                         />
-                                                        <Legend />
-                                                        <Bar dataKey="total" name="Total Matches" fill="#E2E8F0" radius={[4, 4, 0, 0]} />
-                                                        <Bar dataKey="success" name="Successful Matches" fill="#3B82F6" radius={[4, 4, 0, 0]} />
-                                                    </BarChart>
+                                                        <YAxis
+                                                            axisLine={false}
+                                                            tickLine={false}
+                                                            tick={{ fill: '#64748b', fontSize: 12 }}
+                                                        />
+                                                        <Tooltip
+                                                            contentStyle={{
+                                                                borderRadius: '12px',
+                                                                border: '1px solid #e2e8f0',
+                                                                boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
+                                                                background: '#ffffff',
+                                                                color: '#0f172a'
+                                                            }}
+                                                            itemStyle={{ color: '#0f172a' }}
+                                                            cursor={{ stroke: '#3B82F6', strokeWidth: 2, strokeDasharray: '5 5' }}
+                                                        />
+                                                        <Legend verticalAlign="top" height={36} />
+                                                        <Line
+                                                            type="monotone"
+                                                            dataKey="total"
+                                                            name="Total Matches"
+                                                            stroke="#94a3b8"
+                                                            strokeWidth={2}
+                                                            dot={{ r: 4, fill: '#94a3b8' }}
+                                                            activeDot={{ r: 6 }}
+                                                            strokeDasharray="5 5"
+                                                        />
+                                                        <Line
+                                                            type="monotone"
+                                                            dataKey="success"
+                                                            name="Successful Matches"
+                                                            stroke="#3B82F6"
+                                                            strokeWidth={3}
+                                                            dot={{ r: 6, fill: '#3B82F6', strokeWidth: 2, stroke: '#fff' }}
+                                                            activeDot={{ r: 8, strokeWidth: 2, stroke: '#fff' }}
+                                                        />
+                                                    </LineChart>
                                                 </ResponsiveContainer>
                                             </div>
                                         </CardContent>
                                     </Card>
 
                                     {/* Pie Chart */}
-                                    <Card className="border-none shadow-sm h-[400px]">
+                                    <Card className="border border-border shadow-sm h-[400px] bg-white">
                                         <CardContent className="p-6 h-full flex flex-col">
-                                            <h3 className="font-bold text-lg text-slate-800 mb-6 flex items-center gap-2">
+                                            <h3 className="font-bold text-lg text-slate-800 dark:text-slate-800 mb-6 flex items-center gap-2">
                                                 <PieChart className="w-5 h-5 text-purple-500" />
                                                 Requirement Categories
                                             </h3>
@@ -208,7 +248,7 @@ export default function VendorDashboard() {
                                                             dataKey="percentage"
                                                         >
                                                             {pieData.map((entry: any, index: number) => (
-                                                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} stroke="rgba(255,255,255,0.1)" />
                                                             ))}
                                                         </Pie>
                                                         <Tooltip />
@@ -224,20 +264,20 @@ export default function VendorDashboard() {
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                                     <Card className="border-none shadow-sm">
                                         <CardContent className="p-6">
-                                            <h3 className="font-bold text-lg text-slate-800 mb-4">Top Performing Trainers</h3>
+                                            <h3 className="font-bold text-lg text-slate-900 dark:text-slate-900 mb-4">Top Performing Trainers</h3>
                                             <div className="space-y-4">
                                                 {analytics?.trainerPerformanceData?.map((trainer: any, i: number) => (
-                                                    <div key={i} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+                                                    <div key={i} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg border border-border/50">
                                                         <div className="flex items-center gap-3">
-                                                            <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xs">
+                                                            <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-xs border border-blue-200 dark:border-blue-800">
                                                                 {i + 1}
                                                             </div>
                                                             <div>
-                                                                <p className="font-medium text-slate-900">{trainer.trainer}</p>
-                                                                <p className="text-xs text-slate-500">{trainer.matches} matches</p>
+                                                                <p className="font-medium text-foreground">{trainer.trainer}</p>
+                                                                <p className="text-xs text-muted-foreground">{trainer.matches} matches</p>
                                                             </div>
                                                         </div>
-                                                        <Badge className="bg-yellow-100 text-yellow-700 hover:bg-yellow-100">
+                                                        <Badge variant="secondary" className="bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border-blue-100 dark:border-blue-800">
                                                             Rank {i + 1}
                                                         </Badge>
                                                     </div>
@@ -247,19 +287,19 @@ export default function VendorDashboard() {
                                     </Card>
 
                                     {/* Recent Activity Mock (Can fetch from activity service later) */}
-                                    <Card className="border-none shadow-sm">
+                                    <Card className="border border-border shadow-sm bg-white">
                                         <CardContent className="p-6">
-                                            <h3 className="font-bold text-lg text-slate-800 mb-4">Recent Activity</h3>
-                                            <div className="space-y-6 relative before:absolute before:left-4 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200">
+                                            <h3 className="font-bold text-lg text-slate-900 dark:text-slate-900 mb-4">Recent Activity</h3>
+                                            <div className="space-y-6 relative before:absolute before:left-4 before:top-2 before:bottom-2 before:w-0.5 before:bg-border">
                                                 {[
                                                     { text: 'New requirement "Python Bootcamp" posted', time: '2 hours ago', icon: FileText, color: 'bg-blue-500' },
                                                     { text: 'Trainer "John Doe" matched to "Java basics"', time: '5 hours ago', icon: Users, color: 'bg-green-500' },
                                                     { text: 'Proposal for "AI Workshop" generated', time: '1 day ago', icon: TrendingUp, color: 'bg-purple-500' },
                                                 ].map((item, i) => (
                                                     <div key={i} className="relative pl-10">
-                                                        <div className={`absolute left-2.5 -translate-x-1/2 w-3 h-3 rounded-full border-2 border-white ${item.color} ring-1 ring-slate-100`}></div>
-                                                        <p className="text-sm font-medium text-slate-800">{item.text}</p>
-                                                        <p className="text-xs text-slate-400 mt-0.5">{item.time}</p>
+                                                        <div className={`absolute left-2.5 -translate-x-1/2 w-3 h-3 rounded-full border-2 border-background ${item.color} ring-1 ring-border`}></div>
+                                                        <p className="text-sm font-medium text-foreground">{item.text}</p>
+                                                        <p className="text-xs text-muted-foreground mt-0.5">{item.time}</p>
                                                     </div>
                                                 ))}
                                             </div>

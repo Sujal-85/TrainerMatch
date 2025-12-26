@@ -88,7 +88,7 @@ export default function DocumentHub() {
 
     return (
         <ProtectedRoute>
-            <div className="min-h-screen bg-slate-50">
+            <div className="min-h-screen bg-background text-foreground">
                 <Head>
                     <title>Document Hub | Avalytics</title>
                 </Head>
@@ -109,7 +109,7 @@ export default function DocumentHub() {
                                     ))}
                                 </nav>
                                 <h1 className="text-3xl font-bold mb-2">Document Hub</h1>
-                                <p className="text-blue-100">Centralized hub for all your proposals, invoices, and reports.</p>
+                                <p className="text-blue-50/80">Centralized hub for all your proposals, invoices, and reports.</p>
                             </div>
                             <Button className="bg-white text-blue-600 hover:bg-blue-50 border-none shadow-lg">
                                 <Upload className="h-4 w-4 mr-2" />
@@ -120,11 +120,11 @@ export default function DocumentHub() {
 
                     <div className="container mx-auto px-6 -mt-16 relative z-20 pb-10">
                         {/* Search and Filter Bar */}
-                        <div className="bg-white p-4 rounded-xl shadow-lg shadow-blue-900/5 border border-blue-50 mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
+                        <div className="bg-white p-4 rounded-xl shadow-lg border border-border mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
                             <div className="relative flex-1 w-full md:w-auto">
-                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                                 <Input
-                                    className="pl-10 w-full border-slate-200 focus:ring-blue-500"
+                                    className="pl-10 w-full border-border bg-background focus:ring-blue-500"
                                     placeholder="Search documents by name..."
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -135,7 +135,7 @@ export default function DocumentHub() {
                                     variant="outline"
                                     size="icon"
                                     onClick={() => setViewMode('list')}
-                                    className={viewMode === 'list' ? 'bg-blue-50 border-blue-200 text-blue-600' : 'text-slate-500'}
+                                    className={viewMode === 'list' ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400' : 'text-muted-foreground'}
                                 >
                                     <ListIcon className="h-4 w-4" />
                                 </Button>
@@ -143,7 +143,7 @@ export default function DocumentHub() {
                                     variant="outline"
                                     size="icon"
                                     onClick={() => setViewMode('grid')}
-                                    className={viewMode === 'grid' ? 'bg-blue-50 border-blue-200 text-blue-600' : 'text-slate-500'}
+                                    className={viewMode === 'grid' ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400' : 'text-muted-foreground'}
                                 >
                                     <Grid className="h-4 w-4" />
                                 </Button>
@@ -156,12 +156,12 @@ export default function DocumentHub() {
                                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
                             </div>
                         ) : items.length === 0 ? (
-                            <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-slate-200">
-                                <div className="bg-blue-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-border">
+                                <div className="bg-blue-50 dark:bg-blue-900/20 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
                                     <File className="h-10 w-10 text-blue-500" />
                                 </div>
-                                <h3 className="text-xl font-bold text-slate-800 mb-2">No documents found</h3>
-                                <p className="text-slate-500 max-w-md mx-auto mb-8">
+                                <h3 className="text-xl font-bold text-foreground mb-2">No documents found</h3>
+                                <p className="text-muted-foreground max-w-md mx-auto mb-8">
                                     {searchQuery ? `No documents match "${searchQuery}"` : "This folder is empty."}
                                 </p>
                             </div>
@@ -173,18 +173,18 @@ export default function DocumentHub() {
                                             <div
                                                 key={i}
                                                 onClick={() => { setCurrentPath([folder]); setSearchQuery(''); }}
-                                                className="bg-white p-6 rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition-all cursor-pointer group"
+                                                className="bg-white p-6 rounded-xl border border-border shadow-sm hover:shadow-md transition-all cursor-pointer group"
                                             >
                                                 <div className="flex items-start justify-between mb-4">
-                                                    <div className="p-3 bg-blue-50 rounded-lg group-hover:bg-blue-100 transition-colors">
+                                                    <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg group-hover:bg-blue-100 dark:group-hover:bg-blue-900/40 transition-colors">
                                                         <Folder className="h-8 w-8 text-blue-500" />
                                                     </div>
-                                                    <Badge variant="secondary" className="bg-slate-100 text-slate-600">
+                                                    <Badge variant="secondary" className="bg-muted text-muted-foreground">
                                                         {documents.filter(d => d.folderName === folder).length} files
                                                     </Badge>
                                                 </div>
-                                                <h3 className="font-bold text-slate-800 text-lg mb-1">{folder}</h3>
-                                                <p className="text-sm text-slate-500">College Folder</p>
+                                                <h3 className="font-bold text-slate-900 dark:text-slate-900 text-lg mb-1">{folder}</h3>
+                                                <p className="text-sm text-slate-500 dark:text-slate-500">College Folder</p>
                                             </div>
                                         ))}
                                     </div>
@@ -192,56 +192,56 @@ export default function DocumentHub() {
                                     <div className={viewMode === 'grid' ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" : "space-y-3"}>
                                         {items.map((doc: any) => (
                                             viewMode === 'grid' ? (
-                                                <Card key={doc.id} className="group hover:shadow-md transition-all border-slate-200">
+                                                <Card key={doc.id} className="group hover:shadow-md transition-all border-border bg-white">
                                                     <CardContent className="p-5">
                                                         <div className="flex items-start justify-between mb-4">
-                                                            <div className="p-3 rounded-lg bg-orange-50">
+                                                            <div className="p-3 rounded-lg bg-orange-50 dark:bg-orange-950/20">
                                                                 <FileText className="h-6 w-6 text-orange-500" />
                                                             </div>
                                                             <DropdownMenu>
                                                                 <DropdownMenuTrigger asChild>
                                                                     <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                                                                        <MoreVertical className="h-4 w-4 text-slate-400" />
+                                                                        <MoreVertical className="h-4 w-4 text-muted-foreground" />
                                                                     </Button>
                                                                 </DropdownMenuTrigger>
-                                                                <DropdownMenuContent align="end">
-                                                                    <DropdownMenuItem>
+                                                                <DropdownMenuContent align="end" className="bg-white border-border">
+                                                                    <DropdownMenuItem className="hover:bg-muted cursor-pointer">
                                                                         <Eye className="h-4 w-4 mr-2" /> View
                                                                     </DropdownMenuItem>
-                                                                    <DropdownMenuItem>
+                                                                    <DropdownMenuItem className="hover:bg-muted cursor-pointer">
                                                                         <Download className="h-4 w-4 mr-2" /> Download
                                                                     </DropdownMenuItem>
-                                                                    <DropdownMenuItem className="text-red-600" onClick={(e) => { e.stopPropagation(); handleDelete(doc.id); }}>
+                                                                    <DropdownMenuItem className="text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 cursor-pointer" onClick={(e) => { e.stopPropagation(); handleDelete(doc.id); }}>
                                                                         <Trash2 className="h-4 w-4 mr-2" /> Delete
                                                                     </DropdownMenuItem>
                                                                 </DropdownMenuContent>
                                                             </DropdownMenu>
                                                         </div>
-                                                        <h3 className="font-bold text-slate-800 mb-1 truncate" title={doc.title}>{doc.title}</h3>
-                                                        <p className="text-xs text-slate-500 mb-3 uppercase tracking-wider font-semibold">{doc.type}</p>
-                                                        <div className="flex items-center justify-between text-xs text-slate-400 border-t border-slate-50 pt-3">
+                                                        <h3 className="font-bold text-slate-900 dark:text-slate-900 mb-1 truncate" title={doc.title}>{doc.title}</h3>
+                                                        <p className="text-xs text-slate-500 dark:text-slate-500 mb-3 uppercase tracking-wider font-semibold">{doc.type}</p>
+                                                        <div className="flex items-center justify-between text-xs text-slate-400 dark:text-slate-400 border-t border-slate-100 dark:border-slate-100 pt-3">
                                                             <span>{(doc.size / 1024).toFixed(1)} KB</span>
                                                             <span>{new Date(doc.createdAt).toLocaleDateString()}</span>
                                                         </div>
                                                     </CardContent>
                                                 </Card>
                                             ) : (
-                                                <div key={doc.id} className="flex items-center justify-between p-4 bg-white rounded-xl border border-slate-100 hover:shadow-sm transition-all group">
+                                                <div key={doc.id} className="flex items-center justify-between p-4 bg-white rounded-xl border border-border hover:shadow-sm transition-all group">
                                                     <div className="flex items-center gap-4">
-                                                        <div className="p-2 rounded-lg bg-orange-50">
+                                                        <div className="p-2 rounded-lg bg-orange-50 dark:bg-orange-950/20">
                                                             <FileText className="h-5 w-5 text-orange-500" />
                                                         </div>
                                                         <div>
-                                                            <h3 className="font-bold text-slate-800 text-sm">{doc.title}</h3>
-                                                            <p className="text-xs text-slate-500">{doc.type} • {(doc.size / 1024).toFixed(1)} KB</p>
+                                                            <h3 className="font-bold text-slate-900 dark:text-slate-900 text-sm">{doc.title}</h3>
+                                                            <p className="text-xs text-slate-500 dark:text-slate-500">{doc.type} • {(doc.size / 1024).toFixed(1)} KB</p>
                                                         </div>
                                                     </div>
                                                     <div className="flex items-center gap-2">
-                                                        <span className="text-xs text-slate-400 mr-4 hidden md:inline-block">{new Date(doc.createdAt).toLocaleDateString()}</span>
-                                                        <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-blue-600">
+                                                        <span className="text-xs text-muted-foreground mr-4 hidden md:inline-block">{new Date(doc.createdAt).toLocaleDateString()}</span>
+                                                        <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20">
                                                             <Download className="h-4 w-4" />
                                                         </Button>
-                                                        <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-red-600" onClick={() => handleDelete(doc.id)}>
+                                                        <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20" onClick={() => handleDelete(doc.id)}>
                                                             <Trash2 className="h-4 w-4" />
                                                         </Button>
                                                     </div>

@@ -11,12 +11,12 @@ import { ProtectedRoute } from '@/components/ProtectedRoute';
 export default function AdminBilling() {
     return (
         <ProtectedRoute>
-            <div className="min-h-screen bg-slate-50 flex">
+            <div className="min-h-screen bg-background text-foreground flex">
                 <Sidebar />
                 <div className="flex-1 flex flex-col ml-0 md:ml-64 transition-all duration-300">
 
 
-                    <main className="md:pl-0 pt-0 min-h-screen bg-slate-50 w-full">
+                    <main className="md:pl-0 pt-0 min-h-screen bg-background w-full">
                         <div className="bg-gradient-to-r from-blue-800 to-indigo-900 text-white pb-24 pt-10 px-6 shadow-xl">
                             <div className="max-w-7xl mx-auto">
                                 <h1 className="text-3xl font-bold mb-2">Billing & Subscriptions</h1>
@@ -65,26 +65,26 @@ export default function AdminBilling() {
                                 </Card>
                             </div>
 
-                            <Card className="border-none shadow-lg bg-white overflow-hidden">
-                                <CardHeader className="border-b border-slate-100">
+                            <Card className="border border-border shadow-lg bg-white overflow-hidden">
+                                <CardHeader className="border-b border-border">
                                     <CardTitle>Recent Transactions</CardTitle>
                                     <CardDescription>Latest subscription payments</CardDescription>
                                 </CardHeader>
                                 <CardContent className="pt-6">
                                     <div className="space-y-4">
                                         {[1, 2, 3, 4, 5].map((i) => (
-                                            <div key={i} className="flex items-center justify-between p-4 bg-slate-50 rounded-lg border border-slate-100">
+                                            <div key={i} className="flex items-center justify-between p-4 bg-muted/50 rounded-lg border border-border">
                                                 <div className="flex items-center gap-4">
-                                                    <div className="h-10 w-10 bg-white rounded-full flex items-center justify-center border border-slate-200 text-green-600">
+                                                    <div className="h-10 w-10 bg-background rounded-full flex items-center justify-center border border-border text-green-600">
                                                         <DollarSign className="w-5 h-5" />
                                                     </div>
                                                     <div>
-                                                        <div className="font-medium text-slate-900">Enterprise Plan - Acme Corp</div>
-                                                        <div className="text-xs text-slate-500">Dec {12 - i}, 2024 • ID: #INV-{2024000 + i}</div>
+                                                        <div className="font-medium text-foreground">Enterprise Plan - Acme Corp</div>
+                                                        <div className="text-xs text-muted-foreground">Dec {12 - i}, 2024 • ID: #INV-{2024000 + i}</div>
                                                     </div>
                                                 </div>
                                                 <div className="flex items-center gap-6">
-                                                    <div className="font-bold text-slate-900 text-right">$499.00</div>
+                                                    <div className="font-bold text-foreground text-right">$499.00</div>
                                                     <Button variant="ghost" size="sm" className="hidden md:flex gap-2">
                                                         <Download className="w-4 h-4" />
                                                         Invoice

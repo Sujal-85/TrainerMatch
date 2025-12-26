@@ -206,21 +206,21 @@ export default function Signup() {
             <div className="flex flex-col items-center justify-center p-6 lg:p-12 overflow-y-auto">
                 <div className="w-full max-w-md space-y-8">
                     <div className="text-center">
-                        <h2 className="text-3xl font-bold tracking-tight text-slate-900">Create an account</h2>
-                        <p className="mt-2 text-slate-500">
+                        <h2 className="text-3xl font-bold tracking-tight text-foreground">Create an account</h2>
+                        <p className="mt-2 text-muted-foreground">
                             Join TrainerMatch as a Vendor or Trainer
                         </p>
                     </div>
 
                     {/* Role Selector Tabs - Custom Implementation for clean look */}
-                    <div className="flex bg-slate-100 p-1 rounded-xl">
+                    <div className="flex bg-muted p-1 rounded-xl">
                         <button
                             onClick={() => setRole('vendor')}
                             className={cn(
                                 "flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-medium rounded-lg transition-all duration-200",
                                 role === 'vendor'
-                                    ? "bg-white text-blue-600 shadow-sm ring-1 ring-black/5"
-                                    : "text-slate-500 hover:text-slate-700 hover:bg-slate-200/50"
+                                    ? "bg-background text-blue-600 shadow-sm ring-1 ring-black/5"
+                                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                             )}
                         >
                             <Building2 className="w-4 h-4" />
@@ -231,8 +231,8 @@ export default function Signup() {
                             className={cn(
                                 "flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-medium rounded-lg transition-all duration-200",
                                 role === 'trainer'
-                                    ? "bg-white text-indigo-600 shadow-sm ring-1 ring-black/5"
-                                    : "text-slate-500 hover:text-slate-700 hover:bg-slate-200/50"
+                                    ? "bg-background text-indigo-600 shadow-sm ring-1 ring-black/5"
+                                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                             )}
                         >
                             <User className="w-4 h-4" />
@@ -243,7 +243,7 @@ export default function Signup() {
                     <form onSubmit={handleSignup} className="space-y-4">
                         {/* Common Fields with Role-Specific Labels */}
                         <div className="space-y-2">
-                            <Label htmlFor="name" className="text-slate-700">
+                            <Label htmlFor="name" className="text-foreground/80">
                                 {role === 'vendor' ? 'Company Name' : 'Full Name'}
                             </Label>
                             <Input
@@ -253,12 +253,12 @@ export default function Signup() {
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 required
-                                className="h-11 border-slate-200 focus:ring-blue-500 focus:border-blue-500"
+                                className="h-11 border-border bg-background focus:ring-blue-500 focus:border-blue-500"
                             />
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="email" className="text-slate-700">Email address</Label>
+                            <Label htmlFor="email" className="text-foreground/80">Email address</Label>
                             <Input
                                 id="email"
                                 type="email"
@@ -266,14 +266,14 @@ export default function Signup() {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
-                                className="h-11 border-slate-200 focus:ring-blue-500 focus:border-blue-500"
+                                className="h-11 border-border bg-background focus:ring-blue-500 focus:border-blue-500"
                             />
                         </div>
 
                         {/* Vendor Specific Fields */}
                         {role === 'vendor' && (
                             <div className="space-y-2 animate-in fade-in slide-in-from-top-2">
-                                <Label htmlFor="contact" className="text-slate-700">Contact Number</Label>
+                                <Label htmlFor="contact" className="text-foreground/80">Contact Number</Label>
                                 <Input
                                     id="contact"
                                     type="tel"
@@ -281,7 +281,7 @@ export default function Signup() {
                                     value={contactNumber}
                                     onChange={(e) => setContactNumber(e.target.value)}
                                     required
-                                    className="h-11 border-slate-200 focus:ring-blue-500 focus:border-blue-500"
+                                    className="h-11 border-border bg-background focus:ring-blue-500 focus:border-blue-500"
                                 />
                             </div>
                         )}
@@ -400,10 +400,10 @@ export default function Signup() {
 
                     <div className="relative my-6">
                         <div className="absolute inset-0 flex items-center">
-                            <span className="w-full border-t border-slate-200" />
+                            <span className="w-full border-t border-border" />
                         </div>
                         <div className="relative flex justify-center text-xs uppercase">
-                            <span className="bg-background px-2 text-slate-500">
+                            <span className="bg-background px-2 text-muted-foreground">
                                 Or create with
                             </span>
                         </div>

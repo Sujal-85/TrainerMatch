@@ -41,7 +41,7 @@ export default function Matches() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-slate-50">
+      <div className="min-h-screen bg-background">
         <Head>
           <title>TrainerMatch - Matches</title>
           <meta name="description" content="Trainer matches" />
@@ -49,7 +49,7 @@ export default function Matches() {
 
         <Sidebar />
 
-        <main className="md:ml-64 pt-0 transition-all duration-300 min-h-screen bg-slate-50/50">
+        <main className="md:ml-64 pt-0 transition-all duration-300 min-h-screen bg-transparent">
           {/* Premium Header - Reverted to Blue Theme */}
           <div className="relative bg-gradient-to-br from-blue-700 via-blue-800 to-indigo-900 text-white pb-32 pt-12 px-6 overflow-hidden">
             <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-soft-light"></div>
@@ -68,7 +68,7 @@ export default function Matches() {
                   <h1 className="text-4xl font-extrabold tracking-tight mb-2">
                     Trainer Matches
                   </h1>
-                  <p className="text-slate-400 text-lg max-w-2xl">
+                  <p className="text-slate-200/80 text-lg max-w-2xl font-medium">
                     Select a requirement to discover the most qualified trainers handpicked by our AI.
                   </p>
                 </div>
@@ -82,12 +82,12 @@ export default function Matches() {
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
               </div>
             ) : (
-              <Card className="border-none shadow-lg shadow-blue-900/5 overflow-hidden">
-                <CardHeader className="bg-white border-b border-slate-50 pb-4">
+              <Card className="border border-border shadow-lg shadow-blue-900/5 overflow-hidden bg-white">
+                <CardHeader className="bg-white border-b border-border pb-4">
                   <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
                     <div>
-                      <CardTitle className="text-xl font-bold text-slate-800">Available Requirements</CardTitle>
-                      <CardDescription className="text-slate-500">
+                      <CardTitle className="text-xl font-bold text-slate-800 dark:text-white">Available Requirements</CardTitle>
+                      <CardDescription className="text-slate-500 dark:text-zinc-400">
                         Top {requirements.length} active requirements
                       </CardDescription>
                     </div>
@@ -95,37 +95,37 @@ export default function Matches() {
                       <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4" />
                       <input
                         placeholder="Search..."
-                        className="pl-9 pr-4 py-2 bg-slate-50 border border-slate-100 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+                        className="pl-9 pr-4 py-2 bg-slate-50 dark:bg-zinc-800 border border-slate-100 dark:border-white/5 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full text-slate-900 dark:text-zinc-100"
                       />
                     </div>
                   </div>
                 </CardHeader>
                 <CardContent className="p-0 bg-white">
-                  <div className="divide-y divide-slate-50">
+                  <div className="divide-y divide-border">
                     {requirements.map((req) => (
                       <Link href={`/vendor/match/${req.id}`} key={req.id} className="block group">
-                        <div className="p-5 flex items-center justify-between hover:bg-blue-50/50 transition-colors duration-200">
+                        <div className="p-5 flex items-center justify-between hover:bg-blue-50/50 dark:hover:bg-blue-900/10 transition-colors duration-200">
                           <div className="flex items-center gap-4">
-                            <div className="h-12 w-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                            <div className="h-12 w-12 rounded-xl bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
                               <Users className="h-6 w-6" />
                             </div>
                             <div>
-                              <h3 className="font-bold text-slate-800 group-hover:text-blue-700 transition-colors">{req.title}</h3>
-                              <p className="text-sm text-slate-500 line-clamp-1">{req.description || "No description provided."}</p>
+                              <h3 className="font-bold text-slate-800 dark:text-zinc-100 group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors">{req.title}</h3>
+                              <p className="text-sm text-slate-500 dark:text-zinc-400 line-clamp-1">{req.description || "No description provided."}</p>
                             </div>
                           </div>
 
                           <div className="flex items-center gap-6">
                             <div className="text-right hidden sm:block">
-                              <div className="flex items-center justify-end gap-1.5 font-semibold text-slate-700">
+                              <div className="flex items-center justify-end gap-1.5 font-semibold text-slate-700 dark:text-zinc-300">
                                 <Zap className="w-4 h-4 text-amber-500 fill-amber-500" />
                                 {req.matchCount} Matches
                               </div>
-                              <div className="text-xs text-slate-400 mt-1">
+                              <div className="text-xs text-slate-400 dark:text-zinc-500 mt-1">
                                 Posted {req.posted}
                               </div>
                             </div>
-                            <Button size="icon" variant="ghost" className="text-slate-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all">
+                            <Button size="icon" variant="ghost" className="text-slate-400 dark:text-zinc-600 group-hover:text-blue-600 dark:group-hover:text-blue-400 group-hover:translate-x-1 transition-all">
                               <ChevronRight className="h-5 w-5" />
                             </Button>
                           </div>

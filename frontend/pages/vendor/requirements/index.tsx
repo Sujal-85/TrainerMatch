@@ -54,13 +54,13 @@ export default function Requirements() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'matched':
-        return <Badge variant="secondary" className="bg-cyan-100 text-cyan-700 border-cyan-200">Matched</Badge>;
+        return <Badge variant="secondary" className="bg-cyan-100 text-cyan-700 border-cyan-200 dark:bg-cyan-900/30 dark:text-cyan-400 dark:border-cyan-800/50">Matched</Badge>;
       case 'proposals':
-        return <Badge variant="default" className="bg-blue-600 hover:bg-blue-700">Proposals Received</Badge>;
+        return <Badge variant="default" className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700">Proposals Received</Badge>;
       case 'scheduled':
-        return <Badge variant="default" className="bg-emerald-500 hover:bg-emerald-600">Scheduled</Badge>;
+        return <Badge variant="default" className="bg-emerald-500 hover:bg-emerald-600 dark:bg-emerald-600 dark:hover:bg-emerald-700">Scheduled</Badge>;
       default:
-        return <Badge variant="outline" className="border-blue-200 text-blue-600 bg-blue-50">New</Badge>;
+        return <Badge variant="outline" className="border-blue-200 text-blue-600 bg-blue-50 dark:border-blue-800/50 dark:text-blue-400 dark:bg-blue-900/20">New</Badge>;
     }
   };
 
@@ -68,7 +68,7 @@ export default function Requirements() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-slate-50">
+      <div className="min-h-screen bg-background text-foreground">
         <Head>
           <title>TrainerMatch - Requirements</title>
           <meta name="description" content="Manage your training requirements" />
@@ -76,7 +76,7 @@ export default function Requirements() {
 
         <Sidebar />
 
-        <main className="md:pl-64 pt-0 transition-all duration-300 min-h-screen">
+        <main className="md:pl-64 pt-0 transition-all duration-300 min-h-screen bg-transparent">
           {/* Header Section with Gradient Background */}
           <div className="relative bg-gradient-to-r from-blue-600 to-cyan-600 text-white pb-24 pt-10 px-6 shadow-xl">
             <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-soft-light"></div>
@@ -102,15 +102,15 @@ export default function Requirements() {
             ) : (
               <>
                 {/* Search and Filters Card */}
-                <div className="bg-white rounded-xl shadow-lg shadow-blue-900/5 p-4 mb-8 border border-blue-50 flex flex-col sm:flex-row gap-4 items-center">
+                <div className="bg-white rounded-xl shadow-lg border border-border p-4 mb-8 flex flex-col sm:flex-row gap-4 items-center">
                   <div className="relative flex-1 w-full">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4" />
                     <input
                       placeholder="Search requirements..."
-                      className="flex h-10 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 pl-10 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:border-transparent transition-all"
+                      className="flex h-10 w-full rounded-lg border border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-zinc-800 px-3 py-2 pl-10 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:border-transparent transition-all text-slate-900 dark:text-zinc-100"
                     />
                   </div>
-                  <Button variant="outline" className="text-slate-600 border-slate-200 hover:bg-slate-50 w-full sm:w-auto">
+                  <Button variant="outline" className="text-slate-600 dark:text-zinc-400 border-slate-200 dark:border-white/5 hover:bg-slate-50 dark:hover:bg-zinc-800 w-full sm:w-auto">
                     <Filter className="h-4 w-4 mr-2" />
                     Filters
                   </Button>
@@ -119,15 +119,15 @@ export default function Requirements() {
                 {/* Requirements List */}
                 <div className="grid grid-cols-1 gap-6">
                   {requirements.map((requirement) => (
-                    <Card key={requirement.id} className="border-none shadow-md hover:shadow-xl transition-all duration-300 group overflow-hidden">
-                      <CardHeader className="bg-white border-b border-slate-50 pb-4">
+                    <Card key={requirement.id} className="border border-border shadow-md hover:shadow-xl transition-all duration-300 group overflow-hidden bg-white">
+                      <CardHeader className="bg-white border-b border-border pb-4">
                         <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
                           <div className="flex-1">
                             <div className="flex flex-wrap items-center gap-3 mb-2">
-                              <CardTitle className="text-lg text-slate-800 font-bold group-hover:text-blue-600 transition-colors">{requirement.title}</CardTitle>
+                              <CardTitle className="text-lg text-slate-800 dark:text-zinc-100 font-bold group-hover:text-blue-600 transition-colors">{requirement.title}</CardTitle>
                               {getStatusBadge(requirement.status)}
                             </div>
-                            <CardDescription className="mb-4 text-sm text-slate-500 line-clamp-2">
+                            <CardDescription className="mb-4 text-sm text-slate-500 dark:text-zinc-400 line-clamp-2">
                               {requirement.description}
                             </CardDescription>
                             <div className="flex flex-wrap gap-2">
@@ -141,35 +141,35 @@ export default function Requirements() {
                           </div>
                           <div className="flex items-start gap-6 min-w-[150px] justify-end">
                             <div className="text-right">
-                              <div className="flex items-center justify-end gap-1 text-slate-800 font-bold mb-1">
+                              <div className="flex items-center justify-end gap-1 text-slate-800 dark:text-zinc-100 font-bold mb-1">
                                 {requirement.budget}
                               </div>
-                              <p className="text-xs text-slate-500 flex items-center justify-end gap-1">
+                              <p className="text-xs text-slate-500 dark:text-zinc-400 flex items-center justify-end gap-1">
                                 <MapPin className="h-3 w-3" />
                                 {requirement.location}
                               </p>
-                              <p className="text-xs text-slate-400 mt-2">
+                              <p className="text-xs text-slate-400 dark:text-zinc-500 mt-2">
                                 Posted {requirement.datePosted}
                               </p>
                             </div>
                           </div>
                         </div>
                       </CardHeader>
-                      <CardContent className="bg-slate-50/50 pt-4">
+                      <CardContent className="bg-muted/50 pt-4">
                         <div className="flex flex-col sm:flex-row gap-4 justify-between items-center">
-                          <div className="flex items-center gap-2 text-sm text-slate-500">
+                          <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-zinc-400">
                             {requirement.matches > 0 ? (
-                              <span className="flex items-center text-blue-600 font-medium px-2 py-1 rounded bg-blue-50">
+                              <span className="flex items-center text-blue-600 dark:text-blue-400 font-medium px-2 py-1 rounded bg-blue-50 dark:bg-blue-900/30">
                                 <Sparkles className="w-3 h-3 mr-1" />
                                 {requirement.matches} potential matches
                               </span>
                             ) : (
-                              <span className="text-slate-400">Searching for trainers...</span>
+                              <span className="text-slate-400 dark:text-zinc-600">Searching for trainers...</span>
                             )}
                           </div>
                           <div className="flex flex-wrap gap-2 w-full sm:w-auto">
                             <Link href={`/vendor/requirements/${requirement.id}`}>
-                              <Button variant="ghost" className="text-xs md:text-sm h-9 text-slate-600 hover:text-blue-600 hover:bg-blue-50 flex-1 sm:flex-none">
+                              <Button variant="ghost" className="text-xs md:text-sm h-9 text-slate-600 dark:text-zinc-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-zinc-800 flex-1 sm:flex-none">
                                 View Details
                               </Button>
                             </Link>
@@ -195,7 +195,7 @@ export default function Requirements() {
                 </div>
 
                 {requirements.length === 0 && (
-                  <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-slate-200">
+                  <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-border">
                     <div className="bg-blue-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
                       <FileText className="h-10 w-10 text-blue-500" />
                     </div>

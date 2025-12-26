@@ -3,6 +3,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { RequirementsService } from '../requirements/requirements.service';
 import { TrainersService } from '../trainers/trainers.service';
 import { NotificationsService } from '../notifications/notifications.service';
+import { AiService } from '../ai/ai.service';
 
 @Injectable()
 export class MatchesService {
@@ -10,18 +11,12 @@ export class MatchesService {
     private prisma: PrismaService,
     private requirementsService: RequirementsService,
     private trainersService: TrainersService,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
+    private aiService: AiService
   ) { }
 
   /**
    * Calculate match score between a requirement and a trainer
-   * Factors considered:
-   * 1. Skills/Tags overlap (25% weight)
-   * 2. Domain expertise overlap (15% weight)
-   * 3. Location distance (20% weight)
-   * 4. Availability check (20% weight)
-   * 5. Budget fit (10% weight)
-   * 6. Rating weight (10% weight)
    */
   async calculateMatchScore(requirementId: string, trainerId: string): Promise<{ score: number; explanation: string }> {
     const requirement = await this.requirementsService.findOne(requirementId);
@@ -31,55 +26,21 @@ export class MatchesService {
       throw new Error('Requirement or trainer not found');
     }
 
-    // 1. Tags overlap calculation (25% weight)
-    const tagsOverlapScore = this.calculateTagsOverlap(requirement.tags, trainer.tags);
+    try {
+      // Use AI for intelligent matching
+      return await this.aiService.matchTrainerToRequirement(requirement, trainer);
+    } catch (error) {
+      console.error('AI Matching failed, falling back to heuristic:', error);
 
-    // 2. Domain overlap calculation (15% weight) - using strings for now
-    // Assuming requirement title or description might contain domain keywords if not explicit field
-    // For now, let's assume we check if any domain matches requirement tags or text
-    const domainScore = this.calculateDomainOverlap(requirement.tags, trainer.domain || []);
+      // Heuristic Fallback
+      const tagsOverlapScore = this.calculateTagsOverlap(requirement.tags, trainer.tags || trainer.skills || []);
+      const finalScore = tagsOverlapScore;
 
-    // 3. Location distance calculation (20% weight)
-    const locationScore = this.calculateLocationScore(
-      requirement.location,
-      trainer.latitude,
-      trainer.longitude
-    );
-
-    // 4. Availability check (20% weight)
-    const availabilityScore = await this.checkAvailability(requirement.startDate, requirement.endDate, trainerId);
-
-    // 5. Budget fit (10% weight)
-    const budgetScore = this.calculateBudgetFit(requirement.budgetMin, requirement.budgetMax, trainer.hourlyRate);
-
-    // 6. Rating weight (10% weight)
-    const ratingScore = await this.calculateRatingWeight(trainerId);
-
-    // Weighted average calculation
-    const finalScore = (
-      tagsOverlapScore * 0.25 +
-      domainScore * 0.15 +
-      locationScore * 0.20 +
-      availabilityScore * 0.20 +
-      budgetScore * 0.10 +
-      ratingScore * 0.10
-    );
-
-    // Create explanation
-    const explanation = `
-      Skills Match: ${Math.round(tagsOverlapScore * 100)}% (25%)
-      Domain Expertise: ${Math.round(domainScore * 100)}% (15%)
-      Location Proximity: ${Math.round(locationScore * 100)}% (20%)
-      Availability: ${Math.round(availabilityScore * 100)}% (20%)
-      Budget Fit: ${Math.round(budgetScore * 100)}% (10%)
-      Rating: ${Math.round(ratingScore * 100)}% (10%)
-      Final Score: ${Math.round(finalScore * 100)}%
-    `.trim();
-
-    return {
-      score: parseFloat(finalScore.toFixed(2)),
-      explanation,
-    };
+      return {
+        score: parseFloat(finalScore.toFixed(2)),
+        explanation: 'Skills-based heuristic match.',
+      };
+    }
   }
 
   private calculateDomainOverlap(reqTags: string[], trainerDomains: string[]): number {
@@ -274,6 +235,9 @@ export class MatchesService {
   async getTopMatches(requirementId: string): Promise<any[]> {
     // Get all trainers
     const trainers = await this.prisma.trainer.findMany();
+    const logStr = `[${new Date().toISOString()}] Found ${trainers.length} trainers for matching for Req: ${requirementId}\n`;
+    const fs = require('fs');
+    fs.appendFileSync('debug_logs.txt', logStr);
 
     // Calculate scores for each trainer
     const scoredTrainers = [];
@@ -293,6 +257,51 @@ export class MatchesService {
 
     // Sort by score descending and take top 5
     scoredTrainers.sort((a, b) => b.score - a.score);
-    return scoredTrainers.slice(0, 5);
+    const topScored = scoredTrainers.slice(0, 5);
+
+    // Persist or update these in the Match table
+    const finalMatches = [];
+    for (const item of topScored) {
+      const matchRecord = await this.prisma.match.upsert({
+        where: {
+          // Assuming a unique constraint on requirementId + trainerId
+          // If not unique, we'll use findFirst/create
+          id: (await this.prisma.match.findFirst({
+            where: {
+              requirementId,
+              trainerId: item.trainer.id
+            }
+          }))?.id || '000000000000000000000000' // dummy id to trigger create
+        },
+        update: {
+          score: item.score,
+          explanation: item.explanation
+        },
+        create: {
+          requirementId,
+          trainerId: item.trainer.id,
+          score: item.score,
+          explanation: item.explanation,
+          status: 'PENDING'
+        },
+        include: {
+          trainer: true
+        }
+      });
+      finalMatches.push(matchRecord);
+    }
+
+    return finalMatches;
+  }
+
+  async updateStatus(id: string, status: any) {
+    return this.prisma.match.update({
+      where: { id },
+      data: { status },
+      include: {
+        trainer: true,
+        requirement: true
+      }
+    });
   }
 }

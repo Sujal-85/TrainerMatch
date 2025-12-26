@@ -1,11 +1,11 @@
 import { Controller, Get, Post, Param, UseGuards, Body } from '@nestjs/common';
 import { MatchesService } from './matches.service';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { FirebaseAuthGuard } from '../auth/firebase-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
 
 @Controller('matches')
-@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(FirebaseAuthGuard, RolesGuard)
 export class MatchesController {
   constructor(private readonly matchesService: MatchesService) { }
 
@@ -27,12 +27,21 @@ export class MatchesController {
         },
         score: match.score,
         explanation: match.explanation,
+        status: match.status,
+        id: match.id
       })),
     };
   }
+
   @Post(':requirementId/auto-notify')
   @Roles('VENDOR_ADMIN', 'VENDOR_USER')
   async autoNotify(@Param('requirementId') requirementId: string) {
     return this.matchesService.autoNotifyTopMatches(requirementId);
+  }
+
+  @Post(':id/status')
+  @Roles('VENDOR_ADMIN', 'VENDOR_USER')
+  async updateStatus(@Param('id') id: string, @Body('status') status: string) {
+    return this.matchesService.updateStatus(id, status);
   }
 }

@@ -28,12 +28,12 @@ export default function AdminTrainers() {
 
     return (
         <ProtectedRoute>
-            <div className="min-h-screen bg-slate-50 flex">
+            <div className="min-h-screen bg-background text-foreground flex">
                 <Sidebar />
                 <div className="flex-1 flex flex-col ml-0 md:ml-64 transition-all duration-300">
 
 
-                    <main className="md:pl-0 pt-0 min-h-screen bg-slate-50 w-full">
+                    <main className="md:pl-0 pt-0 min-h-screen bg-background w-full">
                         <div className="bg-gradient-to-r from-blue-800 to-indigo-900 text-white pb-24 pt-10 px-6 shadow-xl">
                             <div className="max-w-7xl mx-auto">
                                 <h1 className="text-3xl font-bold mb-2">Trainers</h1>
@@ -47,14 +47,14 @@ export default function AdminTrainers() {
                                 <CardContent className="p-6 bg-white rounded-lg">
                                     <div className="flex items-center gap-4 mb-6">
                                         <div className="relative flex-1 max-w-md">
-                                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
+                                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
                                             <Input placeholder="Search trainers..." className="pl-9" />
                                         </div>
                                     </div>
 
                                     <div className="border rounded-lg overflow-hidden">
                                         <Table>
-                                            <TableHeader className="bg-slate-50">
+                                            <TableHeader className="bg-muted/50">
                                                 <TableRow>
                                                     <TableHead>Trainer</TableHead>
                                                     <TableHead>Expertise</TableHead>
@@ -73,22 +73,22 @@ export default function AdminTrainers() {
                                                                     <AvatarFallback>{trainer.name.charAt(0)}</AvatarFallback>
                                                                 </Avatar>
                                                                 <div>
-                                                                    <div className="font-medium text-slate-900">{trainer.name}</div>
-                                                                    <div className="text-xs text-slate-500">{trainer.email}</div>
+                                                                    <div className="font-medium text-foreground">{trainer.name}</div>
+                                                                    <div className="text-xs text-muted-foreground">{trainer.email}</div>
                                                                 </div>
                                                             </div>
                                                         </TableCell>
                                                         <TableCell>
-                                                            <div className="text-sm text-slate-600">{trainer.expertise}</div>
+                                                            <div className="text-sm text-muted-foreground">{trainer.expertise}</div>
                                                         </TableCell>
                                                         <TableCell>
                                                             {trainer.rating > 0 ? (
-                                                                <div className="flex items-center gap-1 text-sm text-slate-700">
+                                                                <div className="flex items-center gap-1 text-sm text-foreground/80">
                                                                     <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
                                                                     {trainer.rating}
                                                                 </div>
                                                             ) : (
-                                                                <span className="text-xs text-slate-400">No ratings</span>
+                                                                <span className="text-xs text-muted-foreground">No ratings</span>
                                                             )}
                                                         </TableCell>
                                                         <TableCell>
@@ -112,7 +112,7 @@ export default function AdminTrainers() {
                                                                 </div>
                                                             ) : (
                                                                 <Button variant="ghost" size="icon">
-                                                                    <MoreVertical className="w-4 h-4 text-slate-400" />
+                                                                    <MoreVertical className="w-4 h-4 text-muted-foreground" />
                                                                 </Button>
                                                             )}
                                                         </TableCell>

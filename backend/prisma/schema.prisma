@@ -22,6 +22,7 @@ model User {
   passwordHash   String?
   firebaseUid    String?   @unique
   role           Role      @default(VENDOR_ADMIN)
+  profilePicture String?
   vendorId       String?   @db.ObjectId
   vendor         Vendor?   @relation(fields: [vendorId], references: [id])
   trainer        Trainer?

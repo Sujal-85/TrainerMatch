@@ -13,9 +13,16 @@ export class RequirementsService {
     return this.prisma.requirement.findUnique({
       where: { id },
       include: {
-        matches: true,
+        matches: {
+          include: {
+            trainer: true
+          },
+          orderBy: { score: 'desc' }
+        },
         proposals: true,
-        collegeProposals: true, // Include the generated proposal
+        collegeProposals: true,
+        college: true,
+        vendor: true
       }
     });
   }

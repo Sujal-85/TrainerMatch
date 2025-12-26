@@ -16,7 +16,7 @@ export class AiService {
         }
         this.genAI = new GoogleGenerativeAI(apiKey || '');
         // Using stable model gemini-1.5-flash
-        this.model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+        this.model = this.genAI.getGenerativeModel({ model: 'gemini-3-pro-preview' });
     }
 
     async generateProposal(requirementContext: string, trainerProfile: string): Promise<string> {
@@ -131,6 +131,48 @@ export class AiService {
                 emailSubject: `Proposal: ${requirement.title}`,
                 emailBody: 'Please find our proposal attached.'
             };
+        }
+    }
+
+    async matchTrainerToRequirement(requirement: any, trainer: any): Promise<{ score: number; explanation: string }> {
+        const prompt = `
+            Analyze the fit between this training requirement and the trainer profile.
+            
+            REQUIREMENT:
+            Title: ${requirement.title}
+            Description: ${requirement.description}
+            Skills: ${requirement.tags?.join(', ')}
+            Budget: $${requirement.budgetMin} - $${requirement.budgetMax}
+            Location: ${requirement.location}
+
+            TRAINER:
+            Name: ${trainer.name}
+            Bio: ${trainer.bio}
+            Skills: ${trainer.skills?.join(', ')}
+            Location: ${trainer.location}
+            Rating: ${trainer.rating || 'No ratings'}
+            Hourly Rate: $${trainer.hourlyRate || 'Unspecified'}
+
+            Provide:
+            1. A match score between 0.0 and 1.0 (float)
+            2. A brief, professional explanation (max 2 sentences) of why they match or don't.
+
+            OUTPUT FORMAT (JSON):
+            { "score": 0.85, "explanation": "..." }
+        `;
+
+        try {
+            const result = await this.model.generateContent({
+                contents: [{ role: 'user', parts: [{ text: prompt }] }],
+                generationConfig: { responseMimeType: 'application/json' }
+            });
+            const response = await result.response;
+            const text = response.text();
+            const cleanText = text.replace(/```json/g, '').replace(/```/g, '').trim();
+            return JSON.parse(cleanText);
+        } catch (error) {
+            console.error('Error in AI Matching:', error);
+            return { score: 0.5, explanation: 'Heuristic match based on available profile data.' };
         }
     }
 }

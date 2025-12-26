@@ -95,42 +95,33 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 overflow-hidden">
+      <div className="min-h-screen bg-background text-foreground overflow-hidden">
         <Header />
 
         {/* Hero Section - Enhanced Parallax, Animations, and Lottie */}
-        <section className="relative pt-8 pb-24 px-4 overflow-hidden">
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-cyan-600/5 to-transparent"
-            style={{ y: backgroundY, opacity }}
-          />
-
-          {/* Enhanced floating elements with more parallax */}
-          <motion.div
-            className="absolute top-20 left-10 w-96 h-96 bg-cyan-400/20 rounded-full blur-3xl"
-            animate={{ y: [0, -40, 0], x: [0, 30, 0], rotate: [0, 10, 0] }}
-            transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
-            style={{ scale }}
-          />
-          <motion.div
-            className="absolute bottom-0 right-0 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl"
-            animate={{ y: [0, 40, 0], x: [0, -40, 0], rotate: [0, -15, 0] }}
-            transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
-            style={{ scale: useTransform(scrollYProgress, [0, 1], [1, 0.8]) }}
-          />
-          <motion.div
-            className="absolute top-1/3 right-20 w-64 h-64 bg-indigo-400/15 rounded-full blur-3xl"
-            animate={{ y: [0, 30, 0], scale: [1, 1.2, 1] }}
-            transition={{ duration: 18, repeat: Infinity }}
-            style={{ x: useTransform(scrollYProgress, [0, 1], [0, -50]) }}
-          />
+        <section className="relative min-h-[80vh] flex items-center pt-24 pb-32 px-4 overflow-hidden">
+          {/* Video Background */}
+          <div className="absolute inset-0 z-0">
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover"
+            >
+              <source src="/AI_Trainer_Matching_Video_Generation.mp4" type="video/mp4" />
+            </video>
+            {/* Dark/Glassmorphism Overlay for Text Visibility */}
+            <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/80 to-slate-900/40" />
+            <div className="absolute inset-0 backdrop-blur-[2px]" />
+          </div>
 
           <div className="container relative z-10 mx-auto max-w-7xl">
             <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 1, ease: "easeOut" }}
-              className="text-center"
+              className="text-left max-w-3xl"
             >
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
@@ -143,19 +134,19 @@ export default function Home() {
               </motion.div>
 
               <motion.h1
-                className="text-5xl md:text-6xl lg:text-7xl  text-slate-900 mb-8 leading-[1.1] tracking-tight"
+                className="text-5xl md:text-6xl lg:text-6xl font-bold text-white mb-8 leading-[1.1] tracking-tight"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.4, duration: 0.8 }}
               >
                 Discover Your Ideal Trainer<br />
-                <span className="bg-gradient-to-r from-blue-600 via-cyan-500 to-indigo-600 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-blue-400 via-cyan-300 to-indigo-400 bg-clip-text text-transparent">
                   Instantly & Effortlessly
                 </span>
               </motion.h1>
 
               <motion.p
-                className="text-xl md:text-2xl text-slate-600 mb-12 max-w-4xl mx-auto leading-relaxed"
+                className="text-xl md:text-2xl text-slate-200 mb-12 max-w-2xl leading-relaxed"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.6, duration: 0.8 }}
@@ -163,18 +154,8 @@ export default function Home() {
                 Harness advanced AI to connect with pre-vetted expert freelance trainers, perfectly aligned with your skills requirements, teaching style, budget, and schedule.
               </motion.p>
 
-              {/* Added Lottie Animation in Hero */}
               <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.8, duration: 1 }}
-                className="max-w-md mx-auto mb-12"
-              >
-                <Lottie animationData={animationData1} loop={true} />
-              </motion.div>
-
-              <motion.div
-                className="flex flex-col sm:flex-row gap-6 justify-center items-center"
+                className="flex flex-col sm:flex-row gap-6 justify-start items-center"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8, duration: 0.6 }}
@@ -185,32 +166,32 @@ export default function Home() {
                   </Button>
                 </Link>
                 <Link href="#features">
-                  <Button size="lg" variant="outline" className="text-lg px-10 py-8 border-2 rounded-2xl bg-white/80 hover:bg-white text-slate-700 hover:text-blue-700 border-slate-300 hover:border-blue-300 backdrop-blur-sm transition-all hover:-translate-y-1">
+                  <Button size="lg" variant="outline" className="text-lg px-10 py-8 border-2 rounded-2xl bg-white/10 hover:bg-white/20 text-white border-white/20 hover:border-white/40 backdrop-blur-md transition-all hover:-translate-y-1">
                     Explore Features
                   </Button>
                 </Link>
               </motion.div>
 
               <motion.div
-                className="flex flex-wrap gap-10 justify-center mt-16 text-sm text-slate-600"
+                className="flex flex-wrap gap-10 justify-start mt-16 text-sm text-slate-300"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1, duration: 0.8 }}
               >
                 <div className="flex items-center gap-3">
-                  <CheckCircle2 className="w-6 h-6 text-emerald-600" />
+                  <CheckCircle2 className="w-6 h-6 text-emerald-400" />
                   <span className="font-medium">100% Vetted Experts</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Target className="w-6 h-6 text-blue-600" />
+                  <Target className="w-6 h-6 text-blue-400" />
                   <span className="font-medium">98% Match Success Rate</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Clock className="w-6 h-6 text-cyan-600" />
+                  <Clock className="w-6 h-6 text-cyan-400" />
                   <span className="font-medium">Matches in Under 5 Minutes</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Star className="w-6 h-6 text-amber-500" />
+                  <Star className="w-6 h-6 text-amber-400" />
                   <span className="font-medium">4.9/5 Average Rating</span>
                 </div>
               </motion.div>
@@ -219,7 +200,7 @@ export default function Home() {
         </section>
 
         {/* Features Section - Added More Cards, Enhanced Staggered Animations, Images */}
-        <section id="features" className="py-24 px-4 bg-white">
+        <section id="features" className="py-24 px-4 bg-background border-t border-border">
           <div className="container mx-auto max-w-7xl">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -253,7 +234,7 @@ export default function Home() {
                   transition={{ delay: i * 0.2, duration: 0.8, ease: "easeOut" }}
                   whileHover={{ y: -12, transition: { duration: 0.3 } }}
                 >
-                  <Card className="h-full border-0 shadow-2xl hover:shadow-3xl transition-all duration-500 bg-white group relative overflow-hidden">
+                  <Card className="h-full border border-border shadow-2xl hover:shadow-3xl transition-all duration-500 bg-white group relative overflow-hidden">
                     <div className={`absolute inset-0 bg-gradient-to-br ${step.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
                     <CardHeader>
                       <div className="relative w-full h-40 mb-4 overflow-hidden rounded-t-xl">
@@ -279,7 +260,7 @@ export default function Home() {
         </section>
 
         {/* Benefits Section - Added More Cards, Lottie, Enhanced with Icons & Hover Effects */}
-        <section className="py-24 px-4 bg-gradient-to-b from-blue-50/50 to-white">
+        <section className="py-24 px-4 bg-background/50 border-t border-border">
           <div className="container mx-auto max-w-7xl">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -327,7 +308,7 @@ export default function Home() {
                   className="relative group"
                 >
                   <div className={`absolute -inset-2 bg-gradient-to-r from-${benefit.color}-600 to-cyan-600 rounded-3xl blur-lg opacity-30 group-hover:opacity-60 transition duration-700`} />
-                  <Card className="relative bg-white border-0 shadow-xl hover:shadow-2xl h-full transition-all duration-500">
+                  <Card className="relative bg-white border border-border shadow-xl hover:shadow-2xl h-full transition-all duration-500">
                     <CardHeader className="text-center pb-4">
                       <benefit.icon className={`w-16 h-16 mx-auto mb-5 text-${benefit.color}-600 group-hover:scale-110 transition-transform`} />
                       <CardTitle className="text-lg text-slate-900 ">{benefit.title}</CardTitle>
@@ -346,7 +327,7 @@ export default function Home() {
         </section>
 
         {/* New Testimonials Section - With Cards, Images, Animations, Lottie */}
-        <section className="py-24 px-4 bg-white">
+        <section className="py-24 px-4 bg-background border-t border-border">
           <div className="container mx-auto max-w-7xl">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -385,7 +366,7 @@ export default function Home() {
                     transition={{ delay: i * 0.2, duration: 0.8 }}
                     whileHover={{ scale: 1.05, boxShadow: "0 20px 40px rgba(0,0,0,0.1)" }}
                   >
-                    <Card className="h-full border-0 shadow-xl hover:shadow-2xl transition-all duration-500 bg-gradient-to-br from-white to-blue-50">
+                    <Card className="h-full border border-border shadow-xl hover:shadow-2xl transition-all duration-500 bg-white">
                       <CardHeader className="text-center">
                         <div className="relative w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden border-4 border-blue-600 shadow-md">
                           <Image src={testimonial.image} alt={testimonial.name} fill className="object-cover" />
@@ -413,7 +394,7 @@ export default function Home() {
         </section>
 
         {/* New Why Choose Us Section - With More Cards, Parallax Images */}
-        <section className="py-24 px-4 bg-gradient-to-b from-white to-blue-50">
+        <section className="py-24 px-4 bg-background/50 border-t border-border">
           <div className="container mx-auto max-w-7xl">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -445,7 +426,7 @@ export default function Home() {
                   whileHover={{ y: -12 }}
                   className="relative"
                 >
-                  <Card className="h-full border-0 shadow-2xl hover:shadow-3xl transition-all duration-500 bg-white overflow-hidden">
+                  <Card className="h-full border border-border shadow-2xl hover:shadow-3xl transition-all duration-500 bg-white overflow-hidden">
                     <motion.div
                       className="relative w-full h-48"
                       style={{ y: useTransform(scrollYProgress, [0, 1], [0, -50]) }} // Parallax effect on image
@@ -529,7 +510,7 @@ export default function Home() {
           </div>
         </section>
 
-        <footer className="py-16 border-t bg-gradient-to-b from-white to-slate-50">
+        <footer className="py-16 border-t border-border bg-background">
           <div className="container mx-auto max-w-7xl text-center">
             <motion.div
               initial={{ opacity: 0 }}

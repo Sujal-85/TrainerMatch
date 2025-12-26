@@ -15,8 +15,19 @@ import {
   XCircle,
   Search,
   Check,
-  X
+  X,
+  Info,
+  Building2,
+  MapPin,
+  Star
 } from 'lucide-react';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import Sidebar from '@/components/sidebar';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 
@@ -26,6 +37,8 @@ export default function Proposals() {
   const [proposals, setProposals] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
+  const [selectedProposal, setSelectedProposal] = useState<any>(null);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   useEffect(() => {
     fetchProposals();
@@ -38,6 +51,9 @@ export default function Proposals() {
         id: p.id,
         title: p.title || p.requirement?.title || 'Untitled Proposal',
         trainer: p.trainer?.name || 'Unknown Trainer',
+        trainerData: p.trainer,
+        requirementData: p.requirement,
+        content: p.content,
         status: (p.status || 'pending').toLowerCase(),
         submittedDate: new Date(p.createdAt).toLocaleDateString(),
         duration: p.duration || 'N/A',
@@ -47,6 +63,21 @@ export default function Proposals() {
       setProposals(data);
     } catch (error) {
       console.error('Error fetching proposals:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleStatusUpdate = async (id: string, status: string) => {
+    try {
+      setLoading(true);
+      await api.post(`/proposals/${id}/status`, { status });
+      toast.success(`Proposal ${status.toLowerCase()} successfully!`);
+      setIsSheetOpen(false);
+      fetchProposals();
+    } catch (error) {
+      console.error('Error updating status:', error);
+      toast.error('Failed to update proposal status');
     } finally {
       setLoading(false);
     }
@@ -72,7 +103,7 @@ export default function Proposals() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-slate-50">
+      <div className="min-h-screen bg-background text-foreground">
         <Head>
           <title>TrainerMatch - Proposals</title>
           <meta name="description" content="View and manage training proposals" />
@@ -92,32 +123,32 @@ export default function Proposals() {
 
           <div className="container mx-auto px-6 -mt-16 relative z-20 pb-10">
             {/* Filters */}
-            <div className="flex flex-wrap gap-2 mb-8 bg-white p-2 rounded-xl shadow-lg shadow-blue-900/5 border border-blue-50 w-full sm:w-fit">
+            <div className="flex flex-wrap gap-2 mb-8 bg-white p-2 rounded-xl shadow-lg border border-border w-full sm:w-fit">
               <Button
                 variant="ghost"
                 onClick={() => setFilter('all')}
-                className={`rounded-lg ${filter === 'all' ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-slate-500 hover:text-slate-700'}`}
+                className={`rounded-lg ${filter === 'all' ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-semibold' : 'text-muted-foreground hover:text-foreground'}`}
               >
                 All Proposals
               </Button>
               <Button
                 variant="ghost"
                 onClick={() => setFilter('pending')}
-                className={`rounded-lg ${filter === 'pending' ? 'bg-amber-50 text-amber-600 font-semibold' : 'text-slate-500 hover:text-slate-700'}`}
+                className={`rounded-lg ${filter === 'pending' ? 'bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 font-semibold' : 'text-muted-foreground hover:text-foreground'}`}
               >
                 Pending
               </Button>
               <Button
                 variant="ghost"
                 onClick={() => setFilter('accepted')}
-                className={`rounded-lg ${filter === 'accepted' ? 'bg-emerald-50 text-emerald-600 font-semibold' : 'text-slate-500 hover:text-slate-700'}`}
+                className={`rounded-lg ${filter === 'accepted' ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 font-semibold' : 'text-muted-foreground hover:text-foreground'}`}
               >
                 Accepted
               </Button>
               <Button
                 variant="ghost"
                 onClick={() => setFilter('rejected')}
-                className={`rounded-lg ${filter === 'rejected' ? 'bg-red-50 text-red-600 font-semibold' : 'text-slate-500 hover:text-slate-700'}`}
+                className={`rounded-lg ${filter === 'rejected' ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 font-semibold' : 'text-muted-foreground hover:text-foreground'}`}
               >
                 Rejected
               </Button>
@@ -132,20 +163,20 @@ export default function Proposals() {
               <>
                 <div className="grid grid-cols-1 gap-6">
                   {filteredProposals(filter).map((proposal) => (
-                    <Card key={proposal.id} className="border-none shadow-md hover:shadow-xl transition-all duration-300 group overflow-hidden">
-                      <CardHeader className="bg-white border-b border-slate-50 pb-4">
+                    <Card key={proposal.id} className="border-border bg-white shadow-md hover:shadow-xl transition-all duration-300 group overflow-hidden">
+                      <CardHeader className="bg-white border-b border-border pb-4">
                         <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
                           <div>
                             <div className="flex flex-wrap items-center gap-3 mb-2">
-                              <CardTitle className="text-lg font-bold text-slate-800">{proposal.title}</CardTitle>
+                              <CardTitle className="text-lg font-bold text-slate-900 dark:text-slate-900">{proposal.title}</CardTitle>
                               {getStatusBadge(proposal.status)}
                             </div>
                             <CardDescription className="flex flex-wrap items-center gap-4 text-sm mt-1">
-                              <span className="flex items-center gap-1.5 text-slate-600 bg-slate-50 px-2 py-1 rounded-md">
+                              <span className="flex items-center gap-1.5 text-muted-foreground bg-muted px-2 py-1 rounded-md">
                                 <User className="h-3.5 w-3.5 text-blue-500" />
                                 {proposal.trainer}
                               </span>
-                              <span className="flex items-center gap-1.5 text-slate-500">
+                              <span className="flex items-center gap-1.5 text-muted-foreground">
                                 <Calendar className="h-3.5 w-3.5" />
                                 Submitted: {proposal.submittedDate}
                               </span>
@@ -153,23 +184,23 @@ export default function Proposals() {
                           </div>
                           <div className="flex items-center gap-4">
                             <div className="text-right">
-                              <p className="text-2xl font-bold text-slate-800">${proposal.cost.toLocaleString()}</p>
-                              <p className="text-sm text-slate-500 font-medium">{proposal.duration}</p>
+                              <p className="text-2xl font-bold text-slate-900 dark:text-slate-900">${proposal.cost.toLocaleString()}</p>
+                              <p className="text-sm text-slate-500 dark:text-slate-500 font-medium">{proposal.duration}</p>
                             </div>
                           </div>
                         </div>
                       </CardHeader>
-                      <CardContent className="bg-slate-50/50 pt-4">
+                      <CardContent className="bg-muted/30 pt-4">
                         <div className="flex flex-col sm:flex-row gap-4 justify-between items-center">
                           <div className="flex items-center gap-2">
-                            <span className="text-sm font-medium text-slate-500">Trainer Rating:</span>
-                            <div className="flex items-center bg-white px-2 py-1 rounded-full border border-slate-100 shadow-sm">
-                              <span className="text-sm font-bold text-slate-700 mr-1.5">{proposal.rating}</span>
+                            <span className="text-sm font-medium text-slate-500 dark:text-slate-500">Trainer Rating:</span>
+                            <div className="flex items-center bg-white px-2 py-1 rounded-full border border-border shadow-sm">
+                              <span className="text-sm font-bold text-slate-900 dark:text-slate-900 mr-1.5">{proposal.rating}</span>
                               <div className="flex">
                                 {[...Array(5)].map((_, i) => (
                                   <svg
                                     key={i}
-                                    className={`w-3.5 h-3.5 ${i < Math.floor(proposal.rating) ? 'text-amber-400' : 'text-slate-200'}`}
+                                    className={`w-3.5 h-3.5 ${i < Math.floor(proposal.rating) ? 'text-amber-400' : 'text-muted'}`}
                                     fill="currentColor"
                                     viewBox="0 0 20 20"
                                   >
@@ -182,11 +213,18 @@ export default function Proposals() {
                           <div className="flex flex-wrap gap-3 w-full sm:w-auto justify-end">
                             {proposal.status === 'pending' && (
                               <>
-                                <Button variant="outline" className="h-9 border-red-100 text-red-600 hover:bg-red-50 hover:text-red-700">
+                                <Button
+                                  variant="outline"
+                                  className="h-9 border-red-100 text-red-600 hover:bg-red-50 hover:text-red-700"
+                                  onClick={() => handleStatusUpdate(proposal.id, 'REJECTED')}
+                                >
                                   <X className="w-4 h-4 mr-1.5" />
                                   Reject
                                 </Button>
-                                <Button className="h-9 bg-emerald-600 hover:bg-emerald-700 shadow-lg shadow-emerald-500/20 text-white">
+                                <Button
+                                  className="h-9 bg-emerald-600 hover:bg-emerald-700 shadow-lg shadow-emerald-500/20 text-white"
+                                  onClick={() => handleStatusUpdate(proposal.id, 'ACCEPTED')}
+                                >
                                   <Check className="w-4 h-4 mr-1.5" />
                                   Accept Proposal
                                 </Button>
@@ -195,7 +233,16 @@ export default function Proposals() {
                             {proposal.status === 'accepted' && (
                               <Button className="h-9 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-md shadow-blue-500/20">View Session Details</Button>
                             )}
-                            <Button variant="ghost" className="h-9 text-slate-500 hover:text-blue-600 hover:bg-blue-50">View details</Button>
+                            <Button
+                              variant="ghost"
+                              className="h-9 text-slate-500 hover:text-blue-600 hover:bg-blue-50"
+                              onClick={() => {
+                                setSelectedProposal(proposal);
+                                setIsSheetOpen(true);
+                              }}
+                            >
+                              View details
+                            </Button>
                           </div>
                         </div>
                       </CardContent>
@@ -204,12 +251,12 @@ export default function Proposals() {
                 </div>
 
                 {filteredProposals(filter).length === 0 && (
-                  <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-slate-200">
+                  <div className="text-center py-20 bg-white dark:bg-white rounded-3xl border border-dashed border-slate-200 shadow-sm">
                     <div className="bg-slate-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
                       <FileText className="h-10 w-10 text-slate-400" />
                     </div>
-                    <h3 className="text-xl font-bold text-slate-800 mb-2">No proposals found</h3>
-                    <p className="text-slate-500 max-w-md mx-auto">
+                    <h3 className="text-xl font-bold text-slate-800 dark:text-slate-800 mb-2">No proposals found</h3>
+                    <p className="text-slate-500 dark:text-slate-500 max-w-md mx-auto">
                       {filter === 'all'
                         ? "You don't have any proposals yet from trainers."
                         : `You don't have any ${filter} proposals at the moment.`}
@@ -220,7 +267,93 @@ export default function Proposals() {
             )}
           </div>
         </main>
-      </div>
-    </ProtectedRoute>
+      </div >
+
+      <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+        <SheetContent className="sm:max-w-xl overflow-y-auto">
+          <SheetHeader className="border-b pb-4 mb-6">
+            <SheetTitle className="text-2xl font-bold flex items-center gap-2">
+              <FileText className="text-blue-600" />
+              Proposal Details
+            </SheetTitle>
+            <SheetDescription>
+              Detailed breakdown of the trainer's proposal.
+            </SheetDescription>
+          </SheetHeader>
+
+          {selectedProposal && (
+            <div className="space-y-8">
+              {/* Status and Summary */}
+              <div className="flex justify-between items-start bg-slate-50 p-4 rounded-xl border border-slate-100">
+                <div>
+                  <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-1">Requirement</h3>
+                  <p className="text-lg font-bold text-slate-800">{selectedProposal.title}</p>
+                </div>
+                {getStatusBadge(selectedProposal.status)}
+              </div>
+
+              {/* Proposal Content */}
+              <div>
+                <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                  <Info size={16} className="text-blue-500" />
+                  Trainer's Message
+                </h3>
+                <div className="bg-white p-5 rounded-xl border border-slate-100 shadow-sm text-slate-700 leading-relaxed whitespace-pre-wrap">
+                  {selectedProposal.content || "No detailed content provided."}
+                </div>
+              </div>
+
+              {/* Financials & Duration */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-blue-50/50 p-4 rounded-xl border border-blue-100">
+                  <p className="text-xs font-bold text-blue-600 uppercase mb-1">Proposed Cost</p>
+                  <p className="text-2xl font-bold text-slate-800">${selectedProposal.cost.toLocaleString()}</p>
+                </div>
+                <div className="bg-indigo-50/50 p-4 rounded-xl border border-indigo-100">
+                  <p className="text-xs font-bold text-indigo-600 uppercase mb-1">Proposed Duration</p>
+                  <p className="text-xl font-bold text-slate-800">{selectedProposal.duration} days</p>
+                </div>
+              </div>
+
+              {/* Trainer Profile Snippet */}
+              <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">About the Trainer</h3>
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-16 h-16 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xl border-2 border-white shadow-sm">
+                    {selectedProposal.trainerData?.name?.charAt(0) || 'T'}
+                  </div>
+                  <div>
+                    <p className="text-lg font-bold text-slate-800">{selectedProposal.trainer}</p>
+                    <div className="flex items-center gap-2 text-slate-500 text-sm">
+                      <Star className="h-3.5 w-3.5 text-amber-500" />
+                      <span className="font-bold">{selectedProposal.rating}</span>
+                      <span>•</span>
+                      <MapPin className="h-3.5 w-3.5" />
+                      <span>{selectedProposal.trainerData?.location || 'Remote'}</span>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-sm text-slate-600 leading-relaxed mb-4">
+                  {selectedProposal.trainerData?.bio || "No biography provided."}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {selectedProposal.trainerData?.skills?.slice(0, 5).map((skill: string) => (
+                    <Badge key={skill} variant="secondary" className="bg-white text-slate-600 border-slate-200">
+                      {skill}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+
+              {/* Call to Action */}
+              <div className="flex gap-3 pt-4 border-t">
+                <Button variant="outline" className="flex-1">Contact Trainer</Button>
+                <Button className="flex-1 bg-blue-600 hover:bg-blue-700">Accept Proposal</Button>
+              </div>
+            </div>
+          )}
+        </SheetContent>
+      </Sheet>
+    </ProtectedRoute >
   );
 }

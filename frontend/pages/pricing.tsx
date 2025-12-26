@@ -64,6 +64,14 @@ export default function Pricing() {
 
             const { razorpaySubId, id: subId } = response.data;
 
+            // Handle Mock Mode: skip Razorpay if ID starts with mock_
+            if (razorpaySubId && razorpaySubId.startsWith('mock_')) {
+                console.log('Mock subscription detected, skipping Razorpay UI');
+                toast.success('Mock Subscription started successfully!', { id: toastId });
+                router.push('/vendor/dashboard');
+                return;
+            }
+
             // Initialize Razorpay
             const options = {
                 key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
@@ -99,7 +107,7 @@ export default function Pricing() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50">
+        <div className="min-h-screen bg-background">
             <Head>
                 <title>Pricing - TrainerMatch</title>
                 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
@@ -107,7 +115,7 @@ export default function Pricing() {
 
             <Sidebar />
 
-            <main className="md:ml-64 pt-0 transition-all duration-300 min-h-screen">
+            <main className="md:ml-64 pt-0 transition-all duration-300 min-h-screen bg-transparent">
                 <div className="relative bg-gradient-to-r from-blue-700 to-indigo-800 text-white pb-32 pt-16 px-6">
                     <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-soft-light"></div>
                     <div className="container mx-auto text-center relative z-10">
@@ -152,7 +160,7 @@ export default function Pricing() {
                                 <motion.div
                                     key={plan.id}
                                     whileHover={{ y: -10 }}
-                                    className={`relative bg-white rounded-3xl p-8 shadow-xl border-t-4 ${plan.popular ? 'border-indigo-500 scale-105 z-10' : 'border-transparent shadow-slate-200/50'}`}
+                                    className={`relative bg-white rounded-3xl p-8 shadow-xl border-t-4 border-border ${plan.popular ? 'border-indigo-500 scale-105 z-10' : 'shadow-slate-200/50'}`}
                                 >
                                     {plan.popular && (
                                         <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-indigo-600 text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-1">
@@ -164,16 +172,16 @@ export default function Pricing() {
                                         <Icon className={`w-8 h-8 text-${plan.color}-600`} />
                                     </div>
 
-                                    <h3 className="text-2xl font-bold text-slate-900 mb-2">{plan.name}</h3>
-                                    <p className="text-slate-500 text-sm mb-6 leading-relaxed">{plan.description}</p>
+                                    <h3 className="text-2xl font-bold text-foreground mb-2">{plan.name}</h3>
+                                    <p className="text-muted-foreground text-sm mb-6 leading-relaxed">{plan.description}</p>
 
                                     <div className="mb-8">
                                         {isCustom ? (
-                                            <span className="text-4xl font-extrabold text-slate-900">{String(price || 'Custom')}</span>
+                                            <span className="text-4xl font-extrabold text-foreground">{String(price || 'Custom')}</span>
                                         ) : (
                                             <div className="flex items-baseline gap-1">
-                                                <span className="text-4xl font-extrabold text-slate-900">₹{Number(price || 0).toLocaleString()}</span>
-                                                <span className="text-slate-400 font-medium">/mo</span>
+                                                <span className="text-4xl font-extrabold text-foreground">₹{Number(price || 0).toLocaleString()}</span>
+                                                <span className="text-muted-foreground font-medium">/mo</span>
                                             </div>
                                         )}
                                         {!isCustom && (
@@ -195,9 +203,9 @@ export default function Pricing() {
                                     </Button>
 
                                     <div className="mt-8 space-y-4">
-                                        <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">What's included</p>
+                                        <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">What's included</p>
                                         {plan.features.map((feature, i) => (
-                                            <div key={i} className="flex items-center gap-3 text-slate-600">
+                                            <div key={i} className="flex items-center gap-3 text-muted-foreground">
                                                 <div className={`p-0.5 rounded-full bg-${plan.color}-100`}>
                                                     <Check className={`w-3.5 h-3.5 text-${plan.color}-600`} />
                                                 </div>
@@ -212,18 +220,18 @@ export default function Pricing() {
 
                     {/* FAQ or Trust Section */}
                     <div className="mt-24 max-w-3xl mx-auto text-center">
-                        <h2 className="text-3xl font-bold text-slate-900 mb-12">Frequently Asked Questions</h2>
+                        <h2 className="text-3xl font-bold text-foreground mb-12">Frequently Asked Questions</h2>
                         <div className="grid gap-6 text-left">
                             {[
                                 { q: "How does the 14-day trial work?", a: "You'll get full access to all features of your selected plan. You won't be charged until the 14th day. You can cancel at any time before the trial ends." },
                                 { q: "Can I upgrade or downgrade later?", a: "Yes, you can change your plan at any time from your account settings. Changes will be applied at the start of your next billing cycle." },
                                 { q: "Is my payment information secure?", a: "We use Razorpay for all transactions. Your information is encrypted and we never store your credit card details on our servers." }
                             ].map((faq, i) => (
-                                <div key={i} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-                                    <h4 className="font-bold text-slate-900 mb-2 flex items-center gap-2">
+                                <div key={i} className="bg-white p-6 rounded-2xl shadow-sm border border-border">
+                                    <h4 className="font-bold text-foreground mb-2 flex items-center gap-2">
                                         <HelpCircle size={18} className="text-blue-500" /> {faq.q}
                                     </h4>
-                                    <p className="text-slate-600 text-sm">{faq.a}</p>
+                                    <p className="text-muted-foreground text-sm">{faq.a}</p>
                                 </div>
                             ))}
                         </div>
@@ -233,8 +241,8 @@ export default function Pricing() {
                                     <Shield className="text-blue-600" />
                                 </div>
                                 <div className="text-left">
-                                    <h4 className="font-bold text-slate-900">Need a custom plan for your organization?</h4>
-                                    <p className="text-slate-500 text-sm">Talk to our experts for a tailored solution.</p>
+                                    <h4 className="font-bold text-foreground">Need a custom plan for your organization?</h4>
+                                    <p className="text-muted-foreground text-sm">Talk to our experts for a tailored solution.</p>
                                 </div>
                             </div>
                             <Button variant="outline" className="border-blue-200 text-blue-600 hover:bg-blue-100 font-bold px-8">

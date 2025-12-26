@@ -104,7 +104,7 @@ export default function SessionDetail() {
                                                     <span className="flex items-center gap-1"><Clock className="w-4 h-4" /> {new Date(session.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                                                 </div>
                                             </div>
-                                            <Badge variant={session.status === 'COMPLETED' ? 'default' : 'secondary'} className="text-sm px-3 py-1">
+                                            <Badge variant={session.status?.toUpperCase() === 'COMPLETED' ? 'default' : 'secondary'} className="text-sm px-3 py-1">
                                                 {session.status}
                                             </Badge>
                                         </div>

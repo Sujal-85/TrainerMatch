@@ -70,7 +70,7 @@ export default function TrainerAvailability() {
     const blockedDates = availabilities.filter(a => !a.isAvailable);
 
     return (
-        <div className="min-h-screen bg-slate-50 flex">
+        <div className="min-h-screen bg-background text-foreground flex">
             <Sidebar />
             <div className="flex-1 flex flex-col ml-0 md:ml-64 transition-all duration-300">
                 {/* Header Section */}
@@ -133,13 +133,13 @@ export default function TrainerAvailability() {
                         ) : (
                             <>
 
-                                <Card className="lg:col-span-2 shadow-lg border-none bg-white " >
+                                <Card className="lg:col-span-2 shadow-lg border border-border bg-white " >
                                     <CardHeader>
                                         <CardTitle>Calendar</CardTitle>
                                         <CardDescription>Manage your schedule visually</CardDescription>
                                     </CardHeader>
                                     <CardContent>
-                                        <div className="p-4 flex justify-center bg-slate-50 rounded-xl border border-slate-200">
+                                        <div className="p-4 flex justify-center bg-muted/50 rounded-xl border border-border">
                                             <style>{`
                                       .rdp { --rdp-cell-size: 50px; --rdp-accent-color: #7c3aed; --rdp-background-color: #ede9fe; margin: 0; }
                                       .rdp-day_selected { background-color: var(--rdp-accent-color); color: white; }
@@ -168,7 +168,7 @@ export default function TrainerAvailability() {
                                             {/* Helper text or auto-trigger logic could go here */}
                                         </div>
                                         <div className="mt-4 text-center">
-                                            <p className="text-sm text-slate-500">
+                                            <p className="text-sm text-muted-foreground">
                                                 {date ? `Selected Date: ${new Date(date).toLocaleDateString()}` : "Select a date to manage availability"}
                                             </p>
                                             {date && (
@@ -211,7 +211,7 @@ export default function TrainerAvailability() {
                                 </Card>
 
                                 <div className="space-y-6">
-                                    <Card className="shadow-lg border-none bg-white">
+                                    <Card className="shadow-lg border border-border bg-white">
                                         <CardHeader>
                                             <CardTitle className="text-base">Working Hours</CardTitle>
                                         </CardHeader>
@@ -219,22 +219,22 @@ export default function TrainerAvailability() {
                                             {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].map(day => (
                                                 <div key={day} className="flex items-center justify-between text-sm">
                                                     <span className="font-medium w-12">{day}</span>
-                                                    <div className="flex items-center gap-2 text-slate-600">
-                                                        <div className="bg-slate-100 px-2 py-1 rounded">09:00 AM</div>
+                                                    <div className="flex items-center gap-2 text-muted-foreground">
+                                                        <div className="bg-muted px-2 py-1 rounded">09:00 AM</div>
                                                         <span>-</span>
-                                                        <div className="bg-slate-100 px-2 py-1 rounded">05:00 PM</div>
+                                                        <div className="bg-muted px-2 py-1 rounded">05:00 PM</div>
                                                     </div>
                                                 </div>
                                             ))}
                                         </CardContent>
                                     </Card>
 
-                                    <Card className="shadow-lg border-none">
+                                    <Card className="shadow-lg border border-border bg-white">
                                         <CardHeader>
                                             <CardTitle className="text-base">Blocked Dates</CardTitle>
                                         </CardHeader>
                                         <CardContent className="space-y-3">
-                                            {blockedDates.length === 0 && <p className="text-sm text-slate-500">No dates blocked.</p>}
+                                            {blockedDates.length === 0 && <p className="text-sm text-muted-foreground">No dates blocked.</p>}
                                             {blockedDates.map((block: any) => (
                                                 <div key={block.id} className="flex items-center justify-between bg-red-50 p-3 rounded-lg border border-red-100">
                                                     <div>

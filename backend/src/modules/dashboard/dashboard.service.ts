@@ -5,7 +5,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 export class DashboardService {
     constructor(private prisma: PrismaService) { }
 
-    async getStats() {
+    async getStats(): Promise<any> {
         try {
             console.log('Fetching stats...');
             if (!this.prisma) {
@@ -46,7 +46,7 @@ export class DashboardService {
         }
     }
 
-    async getAnalytics() {
+    async getAnalytics(): Promise<any> {
         try {
             const [matches, ratings, requirements] = await Promise.all([
                 this.prisma.match.findMany({
@@ -63,8 +63,12 @@ export class DashboardService {
             // 1. Match Success Data (Last 6 Months)
             const matchSuccessData = this.aggregateMatchSuccess(matches);
 
-            // 2. Trainer Performance (Mock/Aggregate)
-            // Ideally we'd have a Rating model linked. For now, using matches count per trainer
+            // Calculate overall match success rate for the KPI
+            const totalMatches = matches.length;
+            const successfulMatches = matches.filter(m => m.status === 'ACCEPTED').length;
+            const matchSuccess = totalMatches > 0 ? Math.round((successfulMatches / totalMatches) * 100) : 0;
+
+            // 2. Trainer Performance (Aggregate from matches)
             const trainerPerformanceData = this.aggregateTrainerPerformance(ratings);
 
             // 3. Category Distribution
@@ -73,7 +77,8 @@ export class DashboardService {
             return {
                 matchSuccessData,
                 trainerPerformanceData,
-                categoryDistribution
+                categoryDistribution,
+                matchSuccess
             };
         } catch (error) {
             console.error('Analytics Error:', error);
@@ -144,7 +149,7 @@ export class DashboardService {
             .sort((a, b) => b.percentage - a.percentage)
             .slice(0, 5);
     }
-    async getAdminStats() {
+    async getAdminStats(): Promise<any> {
         try {
             const [totalUsers, totalVendors, totalTrainers, pendingApprovals] = await Promise.all([
                 this.prisma.user.count(),

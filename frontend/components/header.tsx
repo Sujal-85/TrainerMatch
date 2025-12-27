@@ -43,7 +43,7 @@ export default function Header() {
 
   const { user, userRole } = useAuth();
 
-  const getNavItems = () => {
+  const getNavItems = (): { href: string; label: string; icon?: any }[] => {
     if (!userRole) {
       return [
         { href: '#features', label: 'Features' },

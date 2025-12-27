@@ -23,7 +23,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-
+import NextImage from 'next/image';
 import { useAuth } from '@/context/AuthContext';
 
 export default function Sidebar() {
@@ -112,12 +112,10 @@ export default function Sidebar() {
             <Link href="/" className="flex items-center gap-3 group" onClick={() => setIsOpen(false)}>
               <div className="relative transform group-hover:scale-105 transition-transform duration-500">
                 <div className="flex items-center gap-2">
-                  <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
-                    <Sparkles className="h-6 w-6 text-white" />
-                  </div>
-                  <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-zinc-400">
-                    Avalytics
-                  </span>
+                  {/* <div className="w-100 h-100  flex items-center justify-center shadow-lg shadow-blue-500/20"> */}
+                    <NextImage src="/image.png" alt="Logo" width={190} height={120} />
+                  {/* </div> */}
+                  
                 </div>
               </div>
             </Link>

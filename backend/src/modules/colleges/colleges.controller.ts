@@ -1,5 +1,6 @@
 import { Controller, Get, Post, Put, Body, Param, UseGuards, Req } from '@nestjs/common';
 import { CollegesService } from './colleges.service';
+import { NotificationsService } from '../notifications/notifications.service';
 import { FirebaseAuthGuard } from '../auth/firebase-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
@@ -7,7 +8,10 @@ import { Roles } from '../auth/roles.decorator';
 @Controller('colleges')
 @UseGuards(FirebaseAuthGuard, RolesGuard)
 export class CollegesController {
-    constructor(private readonly collegesService: CollegesService) { }
+    constructor(
+        private readonly collegesService: CollegesService,
+        private readonly notificationsService: NotificationsService
+    ) { }
 
     @Post()
     @Roles('VENDOR_ADMIN', 'SUPER_ADMIN')
@@ -74,5 +78,35 @@ export class CollegesController {
             ...body,
             performedBy: req.user?.uid || 'user'
         });
+    }
+
+    @Post(':id/email')
+    @Roles('VENDOR_ADMIN', 'SUPER_ADMIN')
+    async sendEmail(
+        @Param('id') id: string,
+        @Body() body: { subject: string, message: string },
+        @Req() req: any
+    ) {
+        const college = await this.collegesService.findOne(id);
+        if (!college || !college.contacts || college.contacts.length === 0) {
+            throw new Error('College or Contact not found');
+        }
+
+        const primaryContact = college.contacts[0]; // Assuming first is primary
+        if (!primaryContact.email) {
+            throw new Error('Primary contact has no email');
+        }
+
+        // Trigger n8n email
+        await this.notificationsService.sendEmail(primaryContact.email, body.subject, body.message);
+
+        // Log Activity
+        await this.collegesService.addActivity(id, {
+            type: 'EMAIL',
+            description: `Sent email with subject: "${body.subject}"`,
+            performedBy: req.user?.uid || 'user'
+        });
+
+        return { success: true, message: 'Email sent successfully via n8n' };
     }
 }

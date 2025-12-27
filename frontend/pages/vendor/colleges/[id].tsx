@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Building2, Phone, Mail, MapPin, Calendar, Clock,
@@ -88,11 +89,30 @@ const CollegeDetail = () => {
                                     </div>
                                 </div>
                                 <div className="ml-auto flex gap-3">
-                                    <button className="px-4 py-2 bg-white border border-gray-200 dark:bg-zinc-800 dark:border-zinc-700 rounded-lg font-medium hover:bg-gray-50 transition-colors flex items-center gap-2">
+                                    <button
+                                        onClick={() => toast.info('Proposal viewer coming soon!')}
+                                        className="px-4 py-2 bg-white border border-gray-200 dark:bg-zinc-800 dark:border-zinc-700 rounded-lg font-medium hover:bg-gray-50 transition-colors flex items-center gap-2">
                                         <FileText size={18} />
                                         View Proposal
                                     </button>
-                                    <button className="px-4 py-2 bg-violet-600 text-white rounded-lg font-medium hover:bg-violet-700 transition-colors flex items-center gap-2 shadow-lg shadow-violet-500/20">
+                                    <button
+                                        onClick={async () => {
+                                            const subject = prompt("Enter email subject:", "Follow up regarding placement");
+                                            if (!subject) return;
+                                            const message = prompt("Enter email message:", "Hi, checking in on the proposal status.");
+                                            if (!message) return;
+
+                                            const toastId = toast.loading('Sending email via n8n...');
+                                            try {
+                                                await api.post(`/colleges/${id}/email`, { subject, message });
+                                                toast.success('Email sent successfully!', { id: toastId });
+                                                fetchCollegeDetails();
+                                            } catch (error) {
+                                                console.error(error);
+                                                toast.error('Failed to send email', { id: toastId });
+                                            }
+                                        }}
+                                        className="px-4 py-2 bg-violet-600 text-white rounded-lg font-medium hover:bg-violet-700 transition-colors flex items-center gap-2 shadow-lg shadow-violet-500/20">
                                         <MessageSquare size={18} />
                                         Send Email
                                     </button>
@@ -169,10 +189,14 @@ const CollegeDetail = () => {
                                                     The system flagged this college for follow-up. The proposal was sent 3 days ago with no response.
                                                 </p>
                                                 <div className="flex gap-3 mt-4">
-                                                    <button className="px-4 py-2 bg-violet-600 text-white text-sm rounded-lg hover:bg-violet-700">
+                                                    <button
+                                                        onClick={() => toast.success('Reminder scheduled!')}
+                                                        className="px-4 py-2 bg-violet-600 text-white text-sm rounded-lg hover:bg-violet-700">
                                                         Send Reminder
                                                     </button>
-                                                    <button className="px-4 py-2 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 text-sm rounded-lg">
+                                                    <button
+                                                        onClick={() => toast.dismiss()}
+                                                        className="px-4 py-2 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 text-sm rounded-lg">
                                                         Dismiss
                                                     </button>
                                                 </div>
@@ -253,7 +277,9 @@ const CollegeDetail = () => {
                                             </div>
                                         </div>
                                     ))}
-                                    <button className="h-full min-h-[200px] border-2 border-dashed border-gray-200 dark:border-zinc-800 rounded-2xl flex flex-col items-center justify-center text-gray-400 hover:border-violet-500 hover:text-violet-600 transition-colors bg-gray-50/50 dark:bg-zinc-900/30">
+                                    <button
+                                        onClick={() => toast.info('Add Stakeholder form coming soon!')}
+                                        className="h-full min-h-[200px] border-2 border-dashed border-gray-200 dark:border-zinc-800 rounded-2xl flex flex-col items-center justify-center text-gray-400 hover:border-violet-500 hover:text-violet-600 transition-colors bg-gray-50/50 dark:bg-zinc-900/30">
                                         <div className="p-3 bg-white dark:bg-zinc-800 rounded-full mb-3 shadow-sm">
                                             <Plus size={24} />
                                         </div>
@@ -295,7 +321,7 @@ const CollegeDetail = () => {
                                                             {hasProposal ? (
                                                                 <button
                                                                     className="flex-1 bg-violet-50 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300 py-2 rounded-lg text-sm font-bold flex items-center justify-center gap-2 hover:bg-violet-100 dark:hover:bg-violet-900/50 transition-colors"
-                                                                    onClick={() => alert(`Opening Proposal: ${req.collegeProposals[0].title}`)}
+                                                                    onClick={() => toast.info(`Opening Proposal: ${req.collegeProposals[0].title}`)}
                                                                 >
                                                                     <FileText size={16} />
                                                                     View AI Proposal
@@ -319,32 +345,34 @@ const CollegeDetail = () => {
                                             <h3 className="font-bold text-gray-900 dark:text-white">Uploaded Documents</h3>
                                             <p className="text-gray-500 text-sm">Proposals, contracts, and other files.</p>
                                         </div>
-                                        <button className="px-4 py-2 bg-violet-600 text-white rounded-lg text-sm font-medium hover:bg-violet-700 flex items-center gap-2">
+                                        <button
+                                            onClick={() => toast.info('Document upload coming soon!')}
+                                            className="px-4 py-2 bg-violet-600 text-white rounded-lg text-sm font-medium hover:bg-violet-700 flex items-center gap-2">
                                             <Upload size={16} />
                                             Upload New
                                         </button>
                                     </div>
 
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                        <div className="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-gray-100 dark:border-zinc-800 flex items-start gap-3 group hover:border-violet-500/30 transition-colors cursor-pointer">
-                                            <div className="p-3 bg-red-100 dark:bg-red-900/30 text-red-600 rounded-lg">
-                                                <FileText size={20} />
-                                            </div>
-                                            <div className="flex-1">
-                                                <h4 className="font-medium text-gray-900 dark:text-white truncate">Project_Proposal_v2.pdf</h4>
-                                                <p className="text-xs text-gray-500 mt-1">2.4 MB • Uploaded 3 days ago</p>
-                                            </div>
+                                    {college.documents && college.documents.length > 0 ? (
+                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                            {college.documents.map((doc: any) => (
+                                                <div key={doc.id} className="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-gray-100 dark:border-zinc-800 flex items-start gap-3 group hover:border-violet-500/30 transition-colors cursor-pointer">
+                                                    <div className="p-3 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-lg">
+                                                        <FileText size={20} />
+                                                    </div>
+                                                    <div className="flex-1 min-w-0">
+                                                        <h4 className="font-medium text-gray-900 dark:text-white truncate" title={doc.title}>{doc.title}</h4>
+                                                        <p className="text-xs text-gray-500 mt-1">{new Date(doc.createdAt).toLocaleDateString()}</p>
+                                                    </div>
+                                                </div>
+                                            ))}
                                         </div>
-                                        <div className="bg-white dark:bg-zinc-900 p-4 rounded-xl border border-gray-100 dark:border-zinc-800 flex items-start gap-3 group hover:border-violet-500/30 transition-colors cursor-pointer">
-                                            <div className="p-3 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-lg">
-                                                <FileText size={20} />
-                                            </div>
-                                            <div className="flex-1">
-                                                <h4 className="font-medium text-gray-900 dark:text-white truncate">College_Requirements.docx</h4>
-                                                <p className="text-xs text-gray-500 mt-1">1.1 MB • Uploaded 5 days ago</p>
-                                            </div>
+                                    ) : (
+                                        <div className="text-center py-12 bg-white dark:bg-zinc-900 rounded-2xl border border-gray-100 dark:border-zinc-800 text-gray-400">
+                                            <FileText size={48} className="mx-auto mb-3 opacity-20" />
+                                            <p>No documents uploaded yet.</p>
                                         </div>
-                                    </div>
+                                    )}
                                 </Tabs.Content>
 
                                 <Tabs.Content value="timeline" className="max-w-3xl">
@@ -368,9 +396,9 @@ const CollegeDetail = () => {
                                 </Tabs.Content>
                             </Tabs.Root>
                         </div>
-                        </>
-                        )}
-                    </main>
+                    </>
+                )}
+            </main>
         </div>
     );
 };

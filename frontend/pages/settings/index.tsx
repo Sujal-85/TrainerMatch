@@ -43,11 +43,11 @@ export default function Settings() {
         const user = response.data;
         setFormData(prev => ({
           ...prev,
-          name: user.name || user.email?.split('@')[0] || '',
+          name: user.trainer?.name || user.name || user.email?.split('@')[0] || '',
           email: user.email || '',
           role: user.role || 'VENDOR_USER',
-          profilePicture: user.profilePicture || '',
-          bio: user.bio || prev.bio,
+          profilePicture: user.trainer?.profilePicture || user.profilePicture || '',
+          bio: user.trainer?.bio || user.bio || prev.bio,
           organization: user.vendor?.name || prev.organization,
         }));
       } catch (error) {

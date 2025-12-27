@@ -129,13 +129,13 @@ export default function TrainerProfile() {
             const uploadFormData = new FormData();
             uploadFormData.append('file', croppedImageBlob, 'profile.jpg');
 
-            const res = await api.post('/uploads/profile-picture', uploadFormData, {
+            const res = await api.post('/uploads/image', uploadFormData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
 
-            const newUrl = res.data.fileUrl;
+            const newUrl = res.data.secure_url;
 
             // Update local state
             setProfile((prev: any) => ({ ...prev, profilePicture: newUrl }));
